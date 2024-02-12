@@ -25,6 +25,7 @@ Gearth = 3.986004415e5;
 Gvenus = 3.257e5;
 G = 6.673e-20;
 
+Rearth = 6378;  
 Rmars = 3397.2;
 Rmoon = 1738;
 Rsaturn = 60268;
@@ -55,6 +56,7 @@ PfromAe = @(a,e) a*(1-e^2);
 Rradial = @(mu,e,h,ta) (h^2/mu)*(1+e*cosd(ta));
 RfromP = @(p,e,ta) p/(1+e*cosd(ta));
 RfromEA = @(a,e,ea) a*(1-e*cos(ea));
+
 % r vector - |r| (cos(raan) + sin(raan))
 RfromAngle = @(r, angle) r*[cosd(angle); sind(angle); 0];
 RfromConic = @(mu,h,e,ta) h^2/(1+e*cosd(ta))/mu;
@@ -73,6 +75,7 @@ Vescape = @(mu,r) sqrt(2*mu/r);
 AfromVR = @(mu,v,r) -mu/(v^2 -(2*mu/r));
 AfromE = @(mu,E) -mu/(2*E);
 AfromPeriod = @(mu,period) nthroot((period/(2*pi))^2 * mu,3);
+AfromRp = @(periapsis,e) periapsis/(1-e);
 
 % semi minor axis
 BfromAE = @(a,e) a * sqrt(1-e^2);
@@ -81,6 +84,7 @@ BfromAE = @(a,e) a * sqrt(1-e^2);
 EccfromHE = @(mu,h,E) sqrt(1+(2*h^2*E/mu^2));
 EccfromHRV = @(mu,r,v,H) cross(v,H)/mu - r/norm(r);
 EccfromArp = @(a,rp) 1-rp/a;
+EccfromAra = @(a,ra) ra/a-1;
 EccfromRpRa = @(rp,ra) (ra-rp)/(ra+rp);
 EccfromAP = @(a,p) sqrt(1-p/a);
 
