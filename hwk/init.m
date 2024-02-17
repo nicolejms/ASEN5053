@@ -49,7 +49,7 @@ Rp = @(a,e) a * (1 - e);
 % radius of apoapsis
 Ra = @(a,e) a * (1 + e);
 
-% semi latum rectum
+% semi latus rectum
 PfromAe = @(a,e) a*(1-e^2);
 
 % radius
@@ -97,12 +97,12 @@ HfromRe = @(mu,r,e) sqrt(mu*(norm(r) + dot(r, e)));
 HfromAe = @(mu,a,e) sqrt(mu*a*(1-e^2));
 
 % specific energy
-EfromA = @(mu,a) -mu/(2*a);
-EfromHe = @(mu,e,h) (e^2-1)*mu^2 / (2* h^2);
-EfromVr = @(mu,v,r) v^2/2 - (mu/r);
+EfromA = @(mu,a) -mu/(2*a); % energy from sma
+EfromHe = @(mu,e,h) (e^2-1)*mu^2 / (2* h^2); % energy from angular momentum
+EfromVr = @(mu,v,r) v^2/2 - (mu/r); % energy from velocity, position
 
 % period
-PeriodfromA = @(mu,a) 2*pi*sqrt(a^3/mu);
+PeriodfromA = @(mu,a) 2*pi*sqrt(a^3/mu); % 
 
 % inclination
 IfromH = @(h) acosd(h(3)/norm(h));
