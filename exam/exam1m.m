@@ -1,0 +1,118 @@
+init
+g0 = 9.08;
+m = 100000 % mass of sc
+r1 = 1000 + Rearth % orbit 1
+r2 = 36000 + Rearth % orbit 2
+e = EccfromRpRa(r1,r2) % transfer orbit
+a = (r1+r2)/2
+v1_i = v1_init(Gearth,r1)
+v1_f = VfromRA(Gearth,r1,a)
+v2_i = VfromRA(Gearth,r2,a)
+v2_f = v2_final(Gearth,r2)
+dv1 = v1_f-v1_i
+dv2 = v2_f-v2_i
+
+dv = dv1+dv2
+TOF = PeriodfromA(Gearth,a)/2
+
+TOF/Hour
+
+% part 2
+% find energy of each orbit to determine thrust requirement
+E_orbit1 = EfromA(Gearth,r1)
+E_transferorbit = EfromA(Gearth,a)
+E_orbit2 = EfromA(Gearth,r2)
+% energy change
+E_1tot = E_transferorbit - E_orbit1
+E_tto2 = E_orbit2 - E_transferorbit
+
+deltaE_tot = E_orbit2-E_orbit1
+
+F1 = E_1tot * m / dv1
+F2 = E_tto2 * m / dv2
+Fneeded = deltaE_tot*m/dv
+Fneeded / TOF
+
+It = F1 + i 
+
+
+
+%% section 2
+c_eff = [100:100:100000];
+dv_km = dv*1000;
+e_ = dv_km./c_eff;
+
+for i = 1:length(e_)
+    m_p(i) = m * (exp(e_(i))-1);
+end
+
+dt = 1; % sec
+Isp = c_eff/g0;
+m_p2 = 134000./((c_eff./dt)-1.34);
+
+
+I = c_eff.*m_p;
+
+figure(1)
+loglog(c_eff,m_p)
+xlabel("Effective Exhaust Velocity - c (m/s)")
+ylabel("Total Propellant Mass - m_p (kg)")
+xlim([0,100000])
+ylim([min(m_p),max(m_p)])
+title("Mass propellant vs. Effective Exhaust Velocity")
+
+
+figure(2)
+loglog(Isp,m_p)
+xlabel("Specific Impulse - I_sp (s)")
+ylabel("Total Propellant Mass - m_p (kg)")
+title("Mass propellant vs. Specific Impulse")
+xlim([0,10000])
+ylim([min(m_p),max(m_p)])
+
+% figure(3)
+% loglog(c_eff,m_p2)
+% xlabel("Effective Exhaust Velocity - c (m/s)")
+% ylabel("2nd burn Propellant Mass - m_p (kg)")
+% % xlim([0,100000])
+% % ylim([min(m_p),max(m_p)])
+% title("2nd burn Mass propellant vs. Effective Exhaust Velocity")
+% 
+
+
+
+figure(3)
+loglog(c_eff,m_p2)
+xlabel("Effective Exhaust Velocity - c (m/s)")
+ylabel("2nd burn Propellant Mass - m_p (kg)")
+% xlim([0,100000])
+% ylim([min(m_p),max(m_p)])
+title("2nd burn Mass propellant vs. Effective Exhaust Velocity")
+
+figure(4)
+loglog(c_eff,I)
+xlabel("Effective Exhaust Velocity - c (m/s)")
+ylabel("Total Impulse (Ns)")
+xlim([0,100000])
+ylim([10e7,max(I)])
+title("Total Impulse vs. Effective Exhaust Velocity")
+
+
+
+
+%% section 3
+% graph thrust as function of 2 burns
+t = [1:10:1000]';
+c= 20;
+F20 = 6126000*(1+1/(c-6.126.*t))
+
+c=1000
+F1000 = 6126000*(1+1/(c-6.126.*t))
+
+c = 3000;
+F3000 = 6126000*(1+1/(c-6.126.*t))
+
+c = 10000
+F10000 = 6126000*(1+1/(c-6.126.*t))
+
+plot(t,F3000)
