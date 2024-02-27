@@ -1,5 +1,7 @@
-init
+
 g0 = 32.174;
+gt = 32.174;
+
 It = 100;
 H2gamma = 1.4;
 H2isp = 284;
@@ -7,7 +9,7 @@ H2rho = 1.1;  % at 3500 psi/0 C
 H2rho = 1.77;
 
 
-m_prop = @(It,Isp) It/Isp/g0;
+m_prop = @(It,Isp) It/Isp/g0  *gt;
 radius = @(vol) (vol/pi*0.75)^(1/3)
 
 H_prop  = m_prop(It,H2isp)
