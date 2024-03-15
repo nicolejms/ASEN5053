@@ -1,45 +1,78 @@
 
-clear; clc;
+%% Hohmann
+% clear; clc;
 close all;
 init;
 mu = Gsun;
 path = "short";
 
 
-%% Hohmann
+
 % Hohmann transfers
+% Earth to Jupiter
+rpt = AofEarthHelio * AU;       % periapsis transfer 1 (Earth)
+rat = AofJupiterHelio * AU;     % apoapsis transfer 1 (Jupiter)
 
-rpt = AofEarthHelio * AU;
-rat = AofJupiterHelio * AU;
+a_t = 0.5 * (AofJupiterHelio + AofEarthHelio)*AU  % semi-major axis 1
+v1i = v1_init(Gsun,rpt)         % initial velocity at Earth
 
-a_t = 0.5 * (AofJupiterHelio + AofEarthHelio)*AU
-v1i = v1_init(Gsun,rpt)
+v2f = v2_final(Gsun,rat)        % final velocity at Jupiter    
+e = EccfromRpRa(rpt,rat)        % eccentricity of transfer orbit 1
 
-v2f = v2_final(Gsun,rat)
-e = EccfromRpRa(rpt,rat)
+Et = EfromA(Gsun,a_t)           % Energy of transfer 1
+vatransfer = VfromRA(Gsun,rat,a_t)  % velocity after delta v at Jupiter
+vptransfer = VfromRA(Gsun,rpt,a_t)  % velocity after delta v at Earth
 
-Et = Efro  mA(Gsun,a_t)
-vatransfer = VfromRA(Gsun,rat,a_t)
-vptransfer = VfromRA(Gsun,rpt,a_t)
-
-deltav1 = vptransfer - v1i
-deltav2 = v2f - vatransfer
-deltavtot = deltav1+deltav2
-TOF = 0.5 * PeriodfromA(Gsun,a_t)
+deltav1 = vptransfer - v1i      % delta v 1 (Earth)
+deltav2 = v2f - vatransfer      % delta v 1 (Jupiter)
+deltavtot = deltav1+deltav2     % total delta v transfer 1
+TOF = 0.5 * PeriodfromA(Gsun,a_t)   % Time of flight transfer 1
 TOFday = TOF/Day
 TOFyear = TOF/Year
 
-mmsc = MMfromMua(Gsun,a_t)
-mmjupiter = MMfromMua(Gsun,rat)
-synod1 = synodFromMm(mmsc,mmjupiter)
-synodcheck = synodFromMua(Gsun,a_t,rat)
-
+mmsc = MMfromMua(Gsun,a_t)      % mean motion of transfer 1
+mmjupiter = MMfromMua(Gsun,rat) % mean motion of Jupiter
+synod1 = synodFromMm(mmsc,mmjupiter)        % synodic period
+synodcheck = synodFromMua(Gsun,a_t,rat)     % verify synod
+    
 synodyear = synod1/Year
 
-phase = pi -( mmjupiter * TOF)
+phase = pi -( mmjupiter * TOF)  % phase angle for intercept 
 phasedeg = rad2deg(phase)
 
-% bi elliptic transfer
+% Jupiter to Europa
+rpt2 = radEuropa;               % periapsis transfer 2 (Europa)
+rat2 = AofJupiterHelio * AU;    % apoapsis transfer 2 (Jupiter)
+
+a_t2 = 0.5 * (rpt2 + rat2)      % semi-major axis transfer 2
+v1i2 = v1_init(Gsun,rat2)       % initial velocity at Jupiter 
+
+v2f2 = v2_final(Gjupiter,rpt2)  % final velocity at Europa
+e2 = EccfromRpRa(rpt2,rat2)     % eccentricity of transfer 2 
+
+Et2 = EfromA(Gsun,a_t2)         % energy of the transfer orbit
+vatransfer2 = VfromRA(Gsun,rat2,a_t2)      % velocity after delta v at Jupiter
+vptransfer2 = VfromRA(Gjupiter,rpt2,a_t2)  % velocity after delta v at Europa
+
+deltav1_2 = vptransfer2 - v1i2      % velocity after delta v at Jupiter
+deltav2_2 = v2f - vatransfer2       % velocity after delta v at Europa
+deltavtot2 = deltav1_2+deltav2_2    % total delta v transfer 2
+TOF2 = 0.5 * PeriodfromA(Gjupiter,a_t2)   % time of flight transfer 2
+TOFday2 = TOF2/Day
+TOFyear2 = TOF2/Year
+
+mmsc2 = MMfromMua(Gjupiter,a_t2)        % mean motion transfer 2
+mmjupiter = MMfromMua(Gsun,rpt2)        % mean motion Europa
+% synod1 = synodFromMm(mmsc,mmjupiter2)
+% synodcheck = synodFromMua(Gsun,a_t2,rat2)
+% 
+% synodyear = synod1/Year
+% 
+% phase = pi -( mmjupiter * TOF)
+% phasedeg = rad2deg(phase)
+% 
+
+%%  bi elliptic transfer
 rb = 11*AU;
 r1i = rpt;
 v1i = v1_init(Gsun,r1i)

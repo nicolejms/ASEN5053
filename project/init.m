@@ -16,6 +16,10 @@ Day = 24*60*60;
 Year = 365*24*60*60;
 
 % constants
+Meuropa = 4.79984e22; 
+
+% gravitational parameter
+G = 6.673e-20;
 Gmars = 4.305e4;
 Gmoon = 4902.799;
 Gsun = 1.32712428e11;
@@ -23,22 +27,32 @@ Gsaturn = 3.794e7;
 Gjupiter = 1.268e8;
 Gearth = 3.986004415e5;
 Gvenus = 3.257e5;
-G = 6.673e-20;
+Geuropa = G * Meuropa;
 
+% radius
 Rearth = 6378;  
 Rmars = 3397.2;
 Rmoon = 1738;
 Rsaturn = 60268;
 Rjupiter = 71492;
 Rvenus = 6052.0;
+Reuropa = 1561;
 
-
+% distance from sun
 AofEarthHelio = 1.0000010178;
 AofSaturnHelio = 9.554909595;
 AofJupiterHelio = 5.202603191;
 AofMarsHelio = 1.524;   
 AofVenus = 1.08208601e8; % km
 AU = 149597870.7;
+
+% orbit of Europa
+periEuropa = 664862;    % km
+apoEuropa = 676938;     % km
+radEuropa = 670900;       % km
+
+% sphere of influence 
+SOIjupiter = 48.2e6;
 
 SaturnJ2 = 0.01645;
 
