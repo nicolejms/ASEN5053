@@ -41,11 +41,12 @@ phase = pi -( mmjupiter * TOF)  % phase angle for intercept
 phasedeg = rad2deg(phase)
 
 % Jupiter to Europa
+% pick initial orbit around Jupiter (apoapsis) 
 rpt2 = radEuropa;               % periapsis transfer 2 (Europa)
-rat2 = AofJupiterHelio * AU;    % apoapsis transfer 2 (Jupiter)
+rat2 = 3e6;    % apoapsis transfer 2 (Jupiter) - start at 3 million km
 
 a_t2 = 0.5 * (rpt2 + rat2)      % semi-major axis transfer 2
-v1i2 = v1_init(Gsun,rat2)       % initial velocity at Jupiter 
+v1i2 = v1_init(Gjupiter,rat2)       % initial velocity at Jupiter 
 
 v2f2 = v2_final(Gjupiter,rpt2)  % final velocity at Europa
 e2 = EccfromRpRa(rpt2,rat2)     % eccentricity of transfer 2 
@@ -57,7 +58,7 @@ vptransfer2 = VfromRA(Gjupiter,rpt2,a_t2)  % velocity after delta v at Europa
 deltav1_2 = vptransfer2 - v1i2      % velocity after delta v at Jupiter
 deltav2_2 = v2f - vatransfer2       % velocity after delta v at Europa
 deltavtot2 = deltav1_2+deltav2_2    % total delta v transfer 2
-TOF2 = 0.5 * PeriodfromA(Gsun,a_t2)   % time of flight transfer 2
+TOF2 = 0.5 * PeriodfromA(Gjupiter,a_t2)   % time of flight transfer 2
 TOFday2 = TOF2/Day
 TOFyear2 = TOF2/Year
 

@@ -41,8 +41,9 @@ phase = pi -( mmjupiter * TOF)  % phase angle for intercept
 phasedeg = rad2deg(phase)
 
 % Jupiter to Europa
+% pick initial orbit around Jupiter (apoapsis) 
 rpt2 = radEuropa;               % periapsis transfer 2 (Europa)
-rat2 = AofJupiterHelio * AU;    % apoapsis transfer 2 (Jupiter)
+rat2 = 8e6;    % apoapsis transfer 2 (Jupiter)
 
 a_t2 = 0.5 * (rpt2 + rat2)      % semi-major axis transfer 2
 v1i2 = v1_init(Gsun,rat2)       % initial velocity at Jupiter 
