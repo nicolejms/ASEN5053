@@ -1,0 +1,6 @@
+% parameter file
+
+earth_hohmann = 400;   % km
+jupiter_hohmann = 2000000; % 2 Million km
+europe_hohmann = 400;  % km
+

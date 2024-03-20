@@ -6,8 +6,6 @@ init;
 mu = Gsun;
 path = "short";
 
-
-
 % Hohmann transfers
 % Earth to Jupiter
 rpt = AofEarthHelio * AU;       % periapsis transfer 1 (Earth)
@@ -43,8 +41,7 @@ phasedeg = rad2deg(phase)
 % Jupiter to Europa
 % pick initial orbit around Jupiter (apoapsis) 
 rpt2 = radEuropa;               % periapsis transfer 2 (Europa)
-rat2 = 3e6;    % apoapsis transfer 2 (Jupiter) - start at 3 million km
-
+rat2 = 2e6;    % apoapsis transfer 2 (Jupiter)
 a_t2 = 0.5 * (rpt2 + rat2)      % semi-major axis transfer 2
 v1i2 = v1_init(Gjupiter,rat2)       % initial velocity at Jupiter 
 
@@ -52,7 +49,7 @@ v2f2 = v2_final(Gjupiter,rpt2)  % final velocity at Europa
 e2 = EccfromRpRa(rpt2,rat2)     % eccentricity of transfer 2 
 
 Et2 = EfromA(Gsun,a_t2)         % energy of the transfer orbit
-vatransfer2 = VfromRA(Gsun,rat2,a_t2)      % velocity after delta v at Jupiter
+vatransfer2 = VfromRA(Gjupiter,rat2,a_t2)      % velocity after delta v at Jupiter
 vptransfer2 = VfromRA(Gjupiter,rpt2,a_t2)  % velocity after delta v at Europa
 
 deltav1_2 = vptransfer2 - v1i2      % velocity after delta v at Jupiter
@@ -73,43 +70,6 @@ mmjupiter = MMfromMua(Gsun,rpt2)        % mean motion Europa
 % phasedeg = rad2deg(phase)
 % 
 
-%%  bi elliptic transfer
-rb = 11*AU;
-r1i = rpt;
-v1i = v1_init(Gsun,r1i)
-r3f = rat;
-v3f = v2_final(Gsun,rat)
- 
-at1 = 0.5*(rpt + rb)
-et1 = (rb - r1i)/(rb + r1i)
-
-
-at2 = 0.5*(rb+rat)
-et2 = EccfromRpRa(rat,rb)
-
-et2check = EccfromRpRa(9.555,11)
-
-vpt1 = VfromRA(Gsun,rpt,at1)
-vat1 = VfromRA(Gsun,rb,at1)
-
-vpt2 = VfromRA(Gsun,rat,at2)
-vat2 = VfromRA(Gsun,rb,at2)
-deltav1t1 = vpt1 - v1i
-deltav2t1 = vat2 - vat1
-deltav3t2 = v3f - vpt2
-
-deltavb = abs(deltav1t1) + abs(deltav2t1) + abs(deltav3t2)
-
-TOFbi = pi * (sqrt(at1^3/Gsun) + sqrt(at2^3)/Gsun)
-TOFbiYear = TOFbi/Year
-deltaV = deltavtot - deltavb
-deltaTOF = TOF - TOFbi
-deltaTOF / Year
-deltaTOF / Day
-
-% part 
-deltavtot_ = deltavtot*1000
-mratio = Mfinal(1,deltavtot,212)
 
 
 %% Lamberts
