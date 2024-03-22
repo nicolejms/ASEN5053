@@ -8,3 +8,7 @@ final_europa_orbit = 400;  % km - above Europa
 
 bielliptic_radius = 6.5*AU
 
+Isp = 250;
+Mass_final = 1000000    % final mass in lbs
+Mass_initial = 2000000  % initial mass in lbs
+

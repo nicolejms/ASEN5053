@@ -15,7 +15,11 @@ Hour = 60*60;
 Day = 24*60*60;
 Year = 365*24*60*60;
 
-% constants
+gc = 32.174;  % conversion
+g0 = 32.174;  % accel due to gravity
+psi2lbf = 144;  
+
+% mass
 Meuropa = 4.79984e22; 
 
 % gravitational parameter
@@ -161,7 +165,7 @@ T_pastPeri = @(n,e,E) (1/n)*(E-e*sin(E));
 
 %% Impulse
 Mfinal = @(Minit,deltaV,Is) Minit * exp(-(deltaV*1000)/(Is*9.81));
-
+Minitial = @(Mfin,deltaV,Is) Mfin * exp((deltaV*1000)/(Is*9.81));
 
 %% transfer orbits
 % Hohmann

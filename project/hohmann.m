@@ -1,158 +1,41 @@
+function [deltavtot, TOF] = hohmann(mu, initial_orbit, final_orbit)
+% UNTITLED5 Summary of this function goes here
+%   Hohmann transfer between two circular orbits
+init
 
-%% Hohmann
-% clear; clc;
-close all;
-init;
-mu = Gsun;
-path = "short";
+    % Hohmann transfers
 
-% Hohmann transfers
-% Earth to Jupiter
-rpt = AofEarthHelio * AU;       % periapsis transfer 1 (Earth)
-rat = AofJupiterHelio * AU;     % apoapsis transfer 1 (Jupiter)
-
-a_t = 0.5 * (AofJupiterHelio + AofEarthHelio)*AU  % semi-major axis 1
-v1i = v1_init(Gsun,rpt)         % initial velocity at Earth
-
-v2f = v2_final(Gsun,rat)        % final velocity at Jupiter    
-e = EccfromRpRa(rpt,rat)        % eccentricity of transfer orbit 1
-
-Et = EfromA(Gsun,a_t)           % Energy of transfer 1
-vatransfer = VfromRA(Gsun,rat,a_t)  % velocity after delta v at Jupiter
-vptransfer = VfromRA(Gsun,rpt,a_t)  % velocity after delta v at Earth
-
-deltav1 = vptransfer - v1i      % delta v 1 (Earth)
-deltav2 = v2f - vatransfer      % delta v 1 (Jupiter)
-deltavtot = deltav1+deltav2     % total delta v transfer 1
-TOF = 0.5 * PeriodfromA(Gsun,a_t)   % Time of flight transfer 1
-TOFday = TOF/Day
-TOFyear = TOF/Year
-
-mmsc = MMfromMua(Gsun,a_t)      % mean motion of transfer 1
-mmjupiter = MMfromMua(Gsun,rat) % mean motion of Jupiter
-synod1 = synodFromMm(mmsc,mmjupiter)        % synodic period
-synodcheck = synodFromMua(Gsun,a_t,rat)     % verify synod
+    rpt = initial_orbit;            % periapsis transfer ellipse
+    rat = final_orbit;              % apoapsis transfer  ellipse
     
-synodyear = synod1/Year
-
-phase = pi -( mmjupiter * TOF)  % phase angle for intercept 
-phasedeg = rad2deg(phase)
-
-% Jupiter to Europa
-% pick initial orbit around Jupiter (apoapsis) 
-rpt2 = radEuropa;               % periapsis transfer 2 (Europa)
-rat2 = 2e6;    % apoapsis transfer 2 (Jupiter)
-a_t2 = 0.5 * (rpt2 + rat2)      % semi-major axis transfer 2
-v1i2 = v1_init(Gjupiter,rat2)       % initial velocity at Jupiter 
-
-v2f2 = v2_final(Gjupiter,rpt2)  % final velocity at Europa
-e2 = EccfromRpRa(rpt2,rat2)     % eccentricity of transfer 2 
-
-Et2 = EfromA(Gsun,a_t2)         % energy of the transfer orbit
-vatransfer2 = VfromRA(Gjupiter,rat2,a_t2)      % velocity after delta v at Jupiter
-vptransfer2 = VfromRA(Gjupiter,rpt2,a_t2)  % velocity after delta v at Europa
-
-deltav1_2 = vptransfer2 - v1i2      % velocity after delta v at Jupiter
-deltav2_2 = v2f - vatransfer2       % velocity after delta v at Europa
-deltavtot2 = deltav1_2+deltav2_2    % total delta v transfer 2
-TOF2 = 0.5 * PeriodfromA(Gjupiter,a_t2)   % time of flight transfer 2
-TOFday2 = TOF2/Day
-TOFyear2 = TOF2/Year
-
-mmsc2 = MMfromMua(Gjupiter,a_t2)        % mean motion transfer 2
-mmjupiter = MMfromMua(Gsun,rpt2)        % mean motion Europa
-% synod1 = synodFromMm(mmsc,mmjupiter2)
-% synodcheck = synodFromMua(Gsun,a_t2,rat2)
-% 
-% synodyear = synod1/Year
-% 
-% phase = pi -( mmjupiter * TOF)
-% phasedeg = rad2deg(phase)
-% 
-
-
-
-%% Lamberts
-
-% import data files 
-opts = delimitedTextImportOptions("NumVariables", 9);
-
-% Specify range and delimiter
-opts.DataLines = [2, Inf];
-opts.Delimiter = ["\t", ","];
-
-% Specify column names and types
-opts.VariableNames = ["JDTDB", "CalendarDateTDB", "X", "Y", "Z", "VX", "VY", "VZ", "VarName9"];
-opts.VariableTypes = ["double", "string", "double", "double", "double", "double", "double", "double", "string"];
-
-% Specify file level properties
-opts.ExtraColumnsRule = "ignore";
-opts.EmptyLineRule = "read";
-
-% Specify variable properties
-opts = setvaropts(opts, ["CalendarDateTDB", "VarName9"], "WhitespaceRule", "preserve");
-opts = setvaropts(opts, ["CalendarDateTDB", "VarName9"], "EmptyFieldRule", "auto");
-%filename: "/Users/nicolejames/src/asen5050/asen5050/hwk/hwk6/HW6_Ephem_Earth.txt"
-% Import the data
-HW6EphemEarth = readtable("earth_ephem.txt", opts);
-HW6EphemMars = readtable("jupiter_ephem_mod.txt", opts);
-
-R1 = [HW6EphemEarth.X, HW6EphemEarth.Y, HW6EphemEarth.Z];
-V1 = [HW6EphemEarth.VX, HW6EphemEarth.VY, HW6EphemEarth.VZ];
-R2 = [HW6EphemMars.X, HW6EphemMars.Y, HW6EphemMars.Z];
-V2 = [HW6EphemMars.VX, HW6EphemMars.VY, HW6EphemMars.VZ];
-
-% create structures to store data
-dvE = []; dvM = []; TOFf = [];Epochs = [];
-k = 1;
-for i = 1:length(R1)
-    r1 = R1(i,1:3);
-    v1 = V1(i,1:3);
-    for j = 1:length(R2)
-        TOF = (HW6EphemMars.JDTDB(j) - HW6EphemEarth.JDTDB(i))*Day;
-        if TOF<0
-            disp("invalid TOF");
-            break;    
-        end
-        r2 = R2(j,1:3);
-        v2 = V2(j,1:3);
-        [vinfe, vinfm] = lambert2(mu,r1,r2,v1,v2,TOF,path);
-        VinfE(i,j) = vinfe;
-        VinfM(i,j) = vinfm;
-    end
+    a_t = 0.5 * (rpt + rat);         % semi-major axis 
+    v1i = v1_init(mu,rpt) ;          % initial velocity
+    
+    v2f = v2_final(mu,rat);        % final velocity    
+    e = EccfromRpRa(rpt,rat);        % eccentricity of transfer orbit
+    
+    Et = EfromA(mu,a_t);           % Energy of transfer orbit
+    vatransfer = VfromRA(mu,rat,a_t);  % velocity after delta v at destination
+    vptransfer = VfromRA(mu,rpt,a_t);  % velocity after delta v at origin
+    
+    deltav1 = vptransfer - v1i;      % delta v origin
+    deltav2 = v2f - vatransfer;      % delta v arrival
+    deltavtot = deltav1+deltav2 ;    % total delta v transfer
+    TOF = 0.5 * PeriodfromA(mu,a_t);   % Time of flight transfer 
+    TOFday = TOF/Day;
+    TOFyear = TOF/Year;
+    
+    mmsc = MMfromMua(mu,a_t);      % mean motion of transfer 
+    mmdestination = MMfromMua(mu,rat); % mean motion of destination
+    synod1 = synodFromMm(mmsc,mmdestination);        % synodic period
+    synodcheck = synodFromMua(mu,a_t,rat);     % verify synod
+        
+    synodyear = synod1/Year;
+    
+    phase = pi -( mmdestination * TOF);  % phase angle for intercept 
+    phasedeg = rad2deg(phase);
 end
 
+    
 
-X = HW6EphemEarth.JDTDB(1:end) - HW6EphemEarth.JDTDB(1);   
-Y = HW6EphemMars.JDTDB(1:end) - HW6EphemMars.JDTDB(1); 
-
-% X = datetime(HW6EphemEarth.JDTDB,'convertfrom','juliandate')
-% Y = datetime(HW6EphemMars.JDTDB,'convertfrom','juliandate')
-figure(1) 
-% peaks = VinfE(:); 
-% peaks = fix(peaks);
-peaks = [3.9 4 4.1 4.2 4.3 4.5 4.7 5 5.5 6 7 8 13 20 30 45 60 61 62 63];
-
-contour(X,Y,VinfE.',peaks,'ShowText','on')
-xlabel("Earth Departure (Days past 6/20/2005)")
-ylabel("Mars Arrival (Days past 12/1/2005)")
-title("V-infinity of Earth Departures")
-colormap winter;
-legend("V_\infty (km/s)", 'Location', 'northoutside','FontSize', 12)
-axis equal;
-set(gca,'XMinorTick','on','YMinorTick','on')
-
-
-figure(2) 
-% peaks = VinfM(:);
-% peaks = fix(peaks);
-peaks = [2 2.4 2.5 2.6 2.7 2.8 2.9 3 3.5 3.8 4 4.5 5 6 7 8 20 30 35 41 42  43 44];
-contour(X,Y,VinfM.',peaks,'ShowText','on')
-xlabel("Earth Departure (Days past 6/20/2005)")
-ylabel("Mars Arrival (Days past 12/1/2005)")
-title("V-infinity of Mars Arrivals")
-colormap turbo;
-legend("V_\infty (km/s)", 'Location', 'northoutside','FontSize', 12)
-axis equal;
-set(gca,'XMinorTick','on','YMinorTick','on')
 
