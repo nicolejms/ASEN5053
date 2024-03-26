@@ -69,7 +69,7 @@ figure(1)
 
 %contour(X,Y,VinfE.',peaks,'ShowText','on')
 %contour(X(1:1096),Y,VinfE.','ShowText','on')
-contour(X(1:748),Y(1:422),VinfM.','ShowText','on')
+contour(X(1:748),Y,VinfE.',peaks,'ShowText','on')
 xlabel("Earth Departure (Days past 6/20/2005)")
 ylabel("Mars Arrival (Days past 12/1/2005)")
 title("V-infinity of Earth Departures")
@@ -83,7 +83,7 @@ figure(2)
 % peaks = VinfM(:);
 % peaks = fix(peaks);
 %peaks = [2 2.4 2.5 2.6 2.7 2.8 2.9 3 3.5 3.8 4 4.5 5 6 7 8 20 30 35 41 42  43 44];
-contour(X(1:748),Y(1:422),VinfM.',peaks,'ShowText','on')
+contour(X(1:748),Y,VinfM.',peaks,'ShowText','on')
 xlabel("Earth Departure (Days past 6/20/2005)")
 ylabel("Mars Arrival (Days past 12/1/2005)")
 title("V-infinity of Mars Arrivals")
