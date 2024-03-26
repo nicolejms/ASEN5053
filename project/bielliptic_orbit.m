@@ -10,22 +10,23 @@ init
      
     at1 = 0.5*(initial_orbit + intermediate_orbit) ;      % semi major axis transfer 1
     et1 = (intermediate_orbit - initial_orbit)/(intermediate_orbit + initial_orbit); % eccentricity transfer 1
-    
+    TOF1 = PeriodfromA(mu,at1)/2;
     % transfer 2
     at2 = 0.5*(intermediate_orbit + final_orbit) ;         % semi major axis transfer 2
     et2 = EccfromRpRa(intermediate_orbit, final_orbit) ;  % eccentricity transfer 2
-    
+    TOF2 = PeriodfromA(mu,at2)/2;
+    % delta v transfer 1
     vpt1 = VfromRA(mu,initial_orbit,at1)  ;  % velocity at periapsis transfer 1
     vat1 = VfromRA(mu,intermediate_orbit,at1)    ; % velocity at apoapsis transfer 1
     
     vpt2 = VfromRA(mu,final_orbit,at2) ;   % velocity at periapsis transfer 2
     vat2 = VfromRA(mu,intermediate_orbit,at2) ;    % velocity at apoapsis transfer 2
-    deltav1t1 = vpt1 - v1i;         % first delta v
-    deltav2t1 = vat2 - vat1;        % intermediate delta v
-    deltav3t2 = v3f - vpt2;         % final delta v
+    deltav1t1 = abs(vpt1) - abs(v1i);         % first delta v
+    deltav2t1 = abs(vat2) - abs(vat1);        % intermediate delta v
+    deltav3t2 = abs(v3f) - abs(vpt2);         % final delta v
 
 deltavb = abs(deltav1t1) + abs(deltav2t1) + abs(deltav3t2);
-
+TOF = TOF1+TOF2;
 TOFbi = pi * (sqrt(at1^3/Gsun) + sqrt(at2^3)/Gsun);
 TOFbiYear = TOFbi/Year;
 

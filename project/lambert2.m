@@ -79,8 +79,8 @@ function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
     [TA1,TA2] = FindTrueAnomalies(t_angle, TA1, TA2);
 
     % use this to find velocity vectors (f & g)
-    fcalc = f(r2,p,t_angle);
-    gcalc = g(Gsun,r2,r1,p,t_angle);
+    fcalc = F(r2,p,t_angle);
+    gcalc = G(Gsun,r2,r1,p,t_angle);
     fdot = Fdot(Gsun,r2,r1,p,t_angle);
     gdot = Gdot(r1,p,t_angle);
 

@@ -1,12 +1,12 @@
-function [deltavtot, TOF] = hohmann(mu, initial_orbit, final_orbit)
+function [deltavtot,e, TOF] = hohmann(mu, periapsis, apoapsis)
 % UNTITLED5 Summary of this function goes here
 %   Hohmann transfer between two circular orbits
 init
 
     % Hohmann transfers
 
-    rpt = initial_orbit;            % periapsis transfer ellipse
-    rat = final_orbit;              % apoapsis transfer  ellipse
+    rpt = periapsis;            % periapsis transfer ellipse
+    rat = apoapsis;              % apoapsis transfer  ellipse
     
     a_t = 0.5 * (rpt + rat);         % semi-major axis 
     v1i = v1_init(mu,rpt) ;          % initial velocity
@@ -20,7 +20,7 @@ init
     
     deltav1 = vptransfer - v1i;      % delta v origin
     deltav2 = v2f - vatransfer;      % delta v arrival
-    deltavtot = deltav1+deltav2 ;    % total delta v transfer
+    deltavtot = abs(deltav1)+abs(deltav2) ;    % total delta v transfer
     TOF = 0.5 * PeriodfromA(mu,a_t);   % Time of flight transfer 
     TOFday = TOF/Day;
     TOFyear = TOF/Year;
