@@ -1,4 +1,4 @@
-%% Problem 2
+  %% Problem 2
 clear; clc;
 close all;
 init;
@@ -66,15 +66,15 @@ figure(1)
 % peaks = VinfE(:); 
 % peaks = fix(peaks);
 
-contour(X(1:536),Y(1:366),VinfE.',peaks,'ShowText','on')
+contour(X(1:748),Y(1:422),VinfE.','ShowText','on')
 %peaks = [3.9 4 4.1 4.2 4.3 4.5 4.7 5 5.5 6 7 8 13 20 30 45 60 61 62 63];
 
 xlabel("Earth Departure (Days past 6/20/2005)")
-ylabel("Mars Arrival (Days past 12/1/2005)")
+ylabel("Jupiter Arrival (Days past 12/1/2005)")
 title("V-infinity of Earth Departures")
 colormap winter;
 legend("V_\infty (km/s)", 'Location', 'northoutside','FontSize', 12)
-axis equal;
+% axis equal;
 set(gca,'XMinorTick','on','YMinorTick','on')
 
 
@@ -82,13 +82,13 @@ figure(2)
 % peaks = VinfM(:);
 % peaks = fix(peaks);
 %peaks = [2 2.4 2.5 2.6 2.7 2.8 2.9 3 3.5 3.8 4 4.5 5 6 7 8 20 30 35 41 42  43 44];
-contour(X(1:748),Y,VinfM.',peaks,'ShowText','on')
+contour(X(1:748),Y(1:422),VinfM.','ShowText','on')
 xlabel("Earth Departure (Days past 6/20/2005)")
-ylabel("Mars Arrival (Days past 12/1/2005)")
-title("V-infinity of Mars Arrivals")
+ylabel("Jupiter Arrival (Days past 12/1/2005)")
+title("V-infinity of Mars Jupiter")
 colormap turbo;
 legend("V_\infty (km/s)", 'Location', 'northoutside','FontSize', 12)
-axis equal;
+%axis equal;
 set(gca,'XMinorTick','on','YMinorTick','on')
 
 

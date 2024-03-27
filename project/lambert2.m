@@ -67,9 +67,12 @@ function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
         end
     end
     % Now find eccentricity from p
-    p = (4*anew * (s-r1)*(s-r2))/c^2 *(sin((alpha+beta)/2))^2;
-    e = EccfromAP(anew,p);
-
+    try
+        p = (4*anew * (s-r1)*(s-r2))/c^2 *(sin((alpha+beta)/2))^2;
+        e = EccfromAP(anew,p);
+    catch
+        p = a0;
+    end
     % and true anomalies
 
     TA1 = TAfromPRE(p,r1,e);

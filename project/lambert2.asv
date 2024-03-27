@@ -1,0 +1,104 @@
+function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
+    init;
+    lesserTOF = true;
+    
+    alpha = @(a,s) 2*asin(sqrt(s/(2*a)));
+    beta = @(a,s,c) 2*asin(sqrt((s-c)/(2*a)));
+    
+    r1 = norm(R1);
+    r2 = norm(R2);
+    
+    t_angle = acosd(dot(R2,R1)/(r2*r1));
+    if (path == "long")
+        t_angle = 2*pi - t_angle;
+    end
+
+    c = sqrt(r1^2+r2^2-(2*r1*r2*cosd(t_angle)));
+    s = 0.5 * (r1+r2+c);
+  
+
+    % check parabolic TOF
+    if path == "short" 
+        TOFp = TOFp_plus(mu,s,c);
+    else
+        TOFp = TOFp_minus(mu,s,c);
+    end
+    
+    if (TOF-TOFp > 0)       % transfer orbit is elliptical so  proceed
+        % find TOFmin
+        a_min = s/2;
+        c_min = 4*a_min-r1-r2;
+        alpha_min = pi;
+        beta_min = beta(a_min,s,c);
+        n_min = sqrt(mu/a_min^3);
+        TOF_min = 1/n_min*((alpha_min-beta_min)-(sin(alpha_min)-sin(beta_min)));
+
+        if (TOF > TOF_min )
+            lesserTOF = false;
+        end
+        
+        deltaa = 100;
+        options = optimoptions('fsolve','Display','off', 'FunctionTolerance',1e-7,'MaxIterations',100);
+        a0 = a_min + deltaa;
+        % error tolerance
+        tol = 1e-6;
+        diff = 1000;
+        i = 1;
+        while (diff > tol)  
+            % Lambert's equation
+            anew = fsolve(@(a)Lamberts(mu,a,s,c,TOF,lesserTOF,path),a0,options);
+            if anew > a_min
+                % recalculate
+                [alpha,beta,n] = FindVars(mu,anew,s,c,lesserTOF,path);
+                % recheck TOF
+                TOFnew =  1/n*((alpha-beta)-(sin(alpha)-sin(beta)));
+                diff = abs(TOFnew-TOF) ;
+            
+                if i==100
+                    disp("could not find value for Lambert")
+                    deltav1 = NaN; deltav2 = NaN;
+                    return;
+                end
+                a0 = anew + 10;
+                i = i+1;
+            else
+                disp("found a < a_min so not valid choice")
+            end
+        end
+    end
+    % Now find eccentricity from p
+    try
+        p = (4*anew * (s-r1)*(s-r2))/c^2 *(sin((alpha+beta)/2))^2;
+        e = EccfromAP(anew,p);
+
+    % and true anomalies
+
+    TA1 = TAfromPRE(p,r1,e);
+    TA2 = TAfromPRE(p,r2,e);
+    
+    % figure out the correct TA1 and TA2 to satisfy deltaTA
+    [TA1,TA2] = FindTrueAnomalies(t_angle, TA1, TA2);
+
+    % use this to find velocity vectors (f & g)
+    fcalc = F(r2,p,t_angle);
+    gcalc = G(Gsun,r2,r1,p,t_angle);
+    fdot = Fdot(Gsun,r2,r1,p,t_angle);
+    gdot = Gdot(r1,p,t_angle);
+
+    V1_f = (R2-fcalc*R1)/gcalc;
+    V2_i = fdot*R1 + gdot*V1_f;
+    deltaV1 = V1_f - V1;
+    deltaV2 = V2 - V2_i;
+
+    deltav1 = norm(deltaV1);
+    deltav2 = norm(deltaV2); 
+
+end
+
+function F = Lamberts(mu,a,s,c,TOF,lesserTOF,path)
+    % calculate parameters with new semi-major axis
+    [alpha,beta,n] = FindVars(mu,a,s,c,lesserTOF,path);
+    % function to solve
+    F = 1/n*((alpha - beta)-(sin(alpha)-sin(beta))) - TOF;
+end
+
