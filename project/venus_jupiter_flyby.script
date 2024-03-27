@@ -1,0 +1,493 @@
+%General Mission Analysis Tool(GMAT) Script
+%Created: 2023-11-12 13:06:50
+
+
+%----------------------------------------
+%---------- Spacecraft
+%----------------------------------------
+
+Create Spacecraft Cassini;
+GMAT Cassini.DateFormat = TDBGregorian;
+GMAT Cassini.Epoch = '14 Mar 2024 00:00:00.000';
+GMAT Cassini.CoordinateSystem = SunInertial;
+GMAT Cassini.DisplayStateType = Cartesian;
+GMAT Cassini.X = -148931680.2832679;
+GMAT Cassini.Y = 16155954.54555795;
+GMAT Cassini.Z = 30634.025006474;
+GMAT Cassini.VX = -3.8047834692746;
+GMAT Cassini.VY = -2.973423888192092;
+GMAT Cassini.VZ = 0.0004954877820024794;
+GMAT Cassini.DryMass = 850;
+GMAT Cassini.Cd = 2.2;
+GMAT Cassini.Cr = 1.8;
+GMAT Cassini.DragArea = 15;
+GMAT Cassini.SRPArea = 1;
+GMAT Cassini.SPADDragScaleFactor = 1;
+GMAT Cassini.SPADSRPScaleFactor = 1;
+GMAT Cassini.AtmosDensityScaleFactor = 1;
+GMAT Cassini.ExtendedMassPropertiesModel = 'None';
+GMAT Cassini.NAIFId = -10006001;
+GMAT Cassini.NAIFIdReferenceFrame = -9006001;
+GMAT Cassini.OrbitColor = Red;
+GMAT Cassini.TargetColor = Teal;
+GMAT Cassini.OrbitErrorCovariance = [ 1e+70 0 0 0 0 0 ; 0 1e+70 0 0 0 0 ; 0 0 1e+70 0 0 0 ; 0 0 0 1e+70 0 0 ; 0 0 0 0 1e+70 0 ; 0 0 0 0 0 1e+70 ];
+GMAT Cassini.CdSigma = 1e+70;
+GMAT Cassini.CrSigma = 1e+70;
+GMAT Cassini.Id = 'SatId';
+GMAT Cassini.Attitude = CoordinateSystemFixed;
+GMAT Cassini.SPADSRPInterpolationMethod = Bilinear;
+GMAT Cassini.SPADSRPScaleFactorSigma = 1e+70;
+GMAT Cassini.SPADDragInterpolationMethod = Bilinear;
+GMAT Cassini.SPADDragScaleFactorSigma = 1e+70;
+GMAT Cassini.AtmosDensityScaleFactorSigma = 1e+70;
+GMAT Cassini.ModelFile = 'aura.3ds';
+GMAT Cassini.ModelOffsetX = 0;
+GMAT Cassini.ModelOffsetY = 0;
+GMAT Cassini.ModelOffsetZ = 0;
+GMAT Cassini.ModelRotationX = 0;
+GMAT Cassini.ModelRotationY = 0;
+GMAT Cassini.ModelRotationZ = 0;
+GMAT Cassini.ModelScale = 1;
+GMAT Cassini.AttitudeDisplayStateType = 'Quaternion';
+GMAT Cassini.AttitudeRateDisplayStateType = 'AngularVelocity';
+GMAT Cassini.AttitudeCoordinateSystem = EarthMJ2000Eq;
+GMAT Cassini.EulerAngleSequence = '321';
+
+
+
+
+
+%----------------------------------------
+%---------- ForceModels
+%----------------------------------------
+
+Create ForceModel DefaultProp_ForceModel;
+GMAT DefaultProp_ForceModel.CentralBody = Earth;
+GMAT DefaultProp_ForceModel.PrimaryBodies = {Earth};
+GMAT DefaultProp_ForceModel.Drag = None;
+GMAT DefaultProp_ForceModel.SRP = Off;
+GMAT DefaultProp_ForceModel.RelativisticCorrection = Off;
+GMAT DefaultProp_ForceModel.ErrorControl = RSSStep;
+GMAT DefaultProp_ForceModel.GravityField.Earth.Degree = 4;
+GMAT DefaultProp_ForceModel.GravityField.Earth.Order = 4;
+GMAT DefaultProp_ForceModel.GravityField.Earth.StmLimit = 100;
+GMAT DefaultProp_ForceModel.GravityField.Earth.PotentialFile = 'JGM2.cof';
+GMAT DefaultProp_ForceModel.GravityField.Earth.TideModel = 'None';
+
+Create ForceModel SunPM_ForceModel;
+GMAT SunPM_ForceModel.CentralBody = Sun;
+GMAT SunPM_ForceModel.PointMasses = {Sun};
+GMAT SunPM_ForceModel.Drag = None;
+GMAT SunPM_ForceModel.SRP = Off;
+GMAT SunPM_ForceModel.RelativisticCorrection = Off;
+GMAT SunPM_ForceModel.ErrorControl = RSSStep;
+
+Create ForceModel JupiterPM_ForceModel;
+GMAT JupiterPM_ForceModel.CentralBody = Jupiter;
+GMAT JupiterPM_ForceModel.PointMasses = {Jupiter};
+GMAT JupiterPM_ForceModel.Drag = None;
+GMAT JupiterPM_ForceModel.SRP = Off;
+GMAT JupiterPM_ForceModel.RelativisticCorrection = Off;
+GMAT JupiterPM_ForceModel.ErrorControl = RSSStep;
+
+Create ForceModel SaturnPM_ForceModel;
+GMAT SaturnPM_ForceModel.CentralBody = Saturn;
+GMAT SaturnPM_ForceModel.PointMasses = {Saturn};
+GMAT SaturnPM_ForceModel.Drag = None;
+GMAT SaturnPM_ForceModel.SRP = Off;
+GMAT SaturnPM_ForceModel.RelativisticCorrection = Off;
+GMAT SaturnPM_ForceModel.ErrorControl = RSSStep;
+
+Create ForceModel MarsPM_ForceModel;
+GMAT MarsPM_ForceModel.CentralBody = Mars;
+GMAT MarsPM_ForceModel.PointMasses = {Mars};
+GMAT MarsPM_ForceModel.Drag = None;
+GMAT MarsPM_ForceModel.SRP = Off;
+GMAT MarsPM_ForceModel.RelativisticCorrection = Off;
+GMAT MarsPM_ForceModel.ErrorControl = RSSStep;
+
+Create ForceModel VenusPM_ForceModel;
+GMAT VenusPM_ForceModel.CentralBody = Venus;
+GMAT VenusPM_ForceModel.PointMasses = {Venus};
+GMAT VenusPM_ForceModel.Drag = None;
+GMAT VenusPM_ForceModel.SRP = Off;
+GMAT VenusPM_ForceModel.RelativisticCorrection = Off;
+GMAT VenusPM_ForceModel.ErrorControl = RSSStep;
+
+Create ForceModel EarthPM_ForceModel;
+GMAT EarthPM_ForceModel.CentralBody = Earth;
+GMAT EarthPM_ForceModel.PointMasses = {Earth};
+GMAT EarthPM_ForceModel.Drag = None;
+GMAT EarthPM_ForceModel.SRP = Off;
+GMAT EarthPM_ForceModel.RelativisticCorrection = Off;
+GMAT EarthPM_ForceModel.ErrorControl = RSSStep;
+
+%----------------------------------------
+%---------- Propagators
+%----------------------------------------
+
+Create Propagator DefaultProp;
+GMAT DefaultProp.FM = DefaultProp_ForceModel;
+GMAT DefaultProp.Type = RungeKutta89;
+GMAT DefaultProp.InitialStepSize = 60;
+GMAT DefaultProp.Accuracy = 9.999999999999999e-12;
+GMAT DefaultProp.MinStep = 0.001;
+GMAT DefaultProp.MaxStep = 2700;
+GMAT DefaultProp.MaxStepAttempts = 50;
+GMAT DefaultProp.StopIfAccuracyIsViolated = true;
+
+Create Propagator SunPM;
+GMAT SunPM.FM = SunPM_ForceModel;
+GMAT SunPM.Type = RungeKutta89;
+GMAT SunPM.InitialStepSize = 3600;
+GMAT SunPM.Accuracy = 9.999999999999999e-12;
+GMAT SunPM.MinStep = 0.001;
+GMAT SunPM.MaxStep = 86400;
+GMAT SunPM.MaxStepAttempts = 50;
+GMAT SunPM.StopIfAccuracyIsViolated = true;
+
+Create Propagator JupiterPM;
+GMAT JupiterPM.FM = JupiterPM_ForceModel;
+GMAT JupiterPM.Type = RungeKutta89;
+GMAT JupiterPM.InitialStepSize = 600;
+GMAT JupiterPM.Accuracy = 9.999999999999999e-12;
+GMAT JupiterPM.MinStep = 0.001;
+GMAT JupiterPM.MaxStep = 2700;
+GMAT JupiterPM.MaxStepAttempts = 50;
+GMAT JupiterPM.StopIfAccuracyIsViolated = true;
+
+Create Propagator SaturnPM;
+GMAT SaturnPM.FM = SaturnPM_ForceModel;
+GMAT SaturnPM.Type = RungeKutta89;
+GMAT SaturnPM.InitialStepSize = 600;
+GMAT SaturnPM.Accuracy = 9.999999999999999e-12;
+GMAT SaturnPM.MinStep = 0.001;
+GMAT SaturnPM.MaxStep = 2700;
+GMAT SaturnPM.MaxStepAttempts = 50;
+GMAT SaturnPM.StopIfAccuracyIsViolated = true;
+
+Create Propagator MarsPM;
+GMAT MarsPM.FM = MarsPM_ForceModel;
+GMAT MarsPM.Type = RungeKutta89;
+GMAT MarsPM.InitialStepSize = 60;
+GMAT MarsPM.Accuracy = 9.999999999999999e-12;
+GMAT MarsPM.MinStep = 0.001;
+GMAT MarsPM.MaxStep = 2700;
+GMAT MarsPM.MaxStepAttempts = 50;
+GMAT MarsPM.StopIfAccuracyIsViolated = true;
+
+Create Propagator VenusPM;
+GMAT VenusPM.FM = VenusPM_ForceModel;
+GMAT VenusPM.Type = RungeKutta89;
+GMAT VenusPM.InitialStepSize = 60;
+GMAT VenusPM.Accuracy = 9.999999999999999e-12;
+GMAT VenusPM.MinStep = 0.001;
+GMAT VenusPM.MaxStep = 2700;
+GMAT VenusPM.MaxStepAttempts = 50;
+GMAT VenusPM.StopIfAccuracyIsViolated = true;
+
+Create Propagator EarthPM;
+GMAT EarthPM.FM = EarthPM_ForceModel;
+GMAT EarthPM.Type = RungeKutta89;
+GMAT EarthPM.InitialStepSize = 60;
+GMAT EarthPM.Accuracy = 9.999999999999999e-12;
+GMAT EarthPM.MinStep = 0.001;
+GMAT EarthPM.MaxStep = 2700;
+GMAT EarthPM.MaxStepAttempts = 50;
+GMAT EarthPM.StopIfAccuracyIsViolated = true;
+
+%----------------------------------------
+%---------- Burns
+%----------------------------------------
+
+Create ImpulsiveBurn DefaultIB;
+GMAT DefaultIB.CoordinateSystem = Local;
+GMAT DefaultIB.Origin = Earth;
+GMAT DefaultIB.Axes = VNB;
+GMAT DefaultIB.Element1 = 0;
+GMAT DefaultIB.Element2 = 0;
+GMAT DefaultIB.Element3 = 0;
+GMAT DefaultIB.DecrementMass = false;
+GMAT DefaultIB.Isp = 300;
+GMAT DefaultIB.GravitationalAccel = 9.81;
+
+%----------------------------------------
+%---------- Coordinate Systems
+%----------------------------------------
+
+Create CoordinateSystem SunInertial;
+GMAT SunInertial.Origin = Sun;
+GMAT SunInertial.Axes = MJ2000Ec;
+
+Create CoordinateSystem SaturnInertial;
+GMAT SaturnInertial.Origin = Saturn;
+GMAT SaturnInertial.Axes = BodyInertial;
+
+Create CoordinateSystem JupiterInertial;
+GMAT JupiterInertial.Origin = Jupiter;
+GMAT JupiterInertial.Axes = BodyInertial;
+
+Create CoordinateSystem MarsInertial;
+GMAT MarsInertial.Origin = Mars;
+GMAT MarsInertial.Axes = BodyInertial;
+
+Create CoordinateSystem VenusInertial;
+GMAT VenusInertial.Origin = Venus;
+GMAT VenusInertial.Axes = BodyInertial;
+
+Create CoordinateSystem EarthInertial;
+GMAT EarthInertial.Origin = Earth;
+GMAT EarthInertial.Axes = BodyInertial;
+
+%----------------------------------------
+%---------- Solvers
+%----------------------------------------
+
+Create DifferentialCorrector DefaultDC;
+GMAT DefaultDC.ShowProgress = true;
+GMAT DefaultDC.ReportStyle = Normal;
+GMAT DefaultDC.ReportFile = 'DifferentialCorrectorDefaultDC.data';
+GMAT DefaultDC.MaximumIterations = 25;
+GMAT DefaultDC.DerivativeMethod = ForwardDifference;
+GMAT DefaultDC.Algorithm = NewtonRaphson;
+
+%----------------------------------------
+%---------- Subscribers
+%----------------------------------------
+
+Create OrbitView Heliocentric;
+GMAT Heliocentric.SolverIterations = Current;
+GMAT Heliocentric.UpperLeft = [ 0.260038240917782 -0.02718168812589413 ];
+GMAT Heliocentric.Size = [ 0.4639898024219248 0.9542203147353362 ];
+GMAT Heliocentric.RelativeZOrder = 924;
+GMAT Heliocentric.Maximized = false;
+GMAT Heliocentric.Add = {Cassini, Sun, Jupiter, Venus};
+GMAT Heliocentric.CoordinateSystem = SunInertial;
+GMAT Heliocentric.DrawObject = [ true true true true ];
+GMAT Heliocentric.DataCollectFrequency = 1;
+GMAT Heliocentric.UpdatePlotFrequency = 10;
+GMAT Heliocentric.NumPointsToRedraw = 0;
+GMAT Heliocentric.ShowPlot = true;
+GMAT Heliocentric.MaxPlotPoints = 20000;
+GMAT Heliocentric.ShowLabels = true;
+GMAT Heliocentric.ViewPointReference = Sun;
+GMAT Heliocentric.ViewPointVector = [ 0 0 2500000000 ];
+GMAT Heliocentric.ViewDirection = Sun;
+GMAT Heliocentric.ViewScaleFactor = 1;
+GMAT Heliocentric.ViewUpCoordinateSystem = SunInertial;
+GMAT Heliocentric.ViewUpAxis = Z;
+GMAT Heliocentric.EclipticPlane = Off;
+GMAT Heliocentric.XYPlane = On;
+GMAT Heliocentric.WireFrame = Off;
+GMAT Heliocentric.Axes = On;
+GMAT Heliocentric.Grid = Off;
+GMAT Heliocentric.SunLine = Off;
+GMAT Heliocentric.UseInitialView = On;
+GMAT Heliocentric.StarCount = 7000;
+GMAT Heliocentric.EnableStars = On;
+GMAT Heliocentric.EnableConstellations = Off;
+
+Create OrbitView JupiterOrbit;
+GMAT JupiterOrbit.SolverIterations = Current;
+GMAT JupiterOrbit.UpperLeft = [ 0.03441682600382409 0.01430615164520744 ];
+GMAT JupiterOrbit.Size = [ 0.4028043339706819 0.9356223175965666 ];
+GMAT JupiterOrbit.RelativeZOrder = 916;
+GMAT JupiterOrbit.Maximized = false;
+GMAT JupiterOrbit.Add = {Cassini, Jupiter};
+GMAT JupiterOrbit.CoordinateSystem = JupiterInertial;
+GMAT JupiterOrbit.DrawObject = [ true true ];
+GMAT JupiterOrbit.DataCollectFrequency = 1;
+GMAT JupiterOrbit.UpdatePlotFrequency = 10;
+GMAT JupiterOrbit.NumPointsToRedraw = 0;
+GMAT JupiterOrbit.ShowPlot = true;
+GMAT JupiterOrbit.MaxPlotPoints = 20000;
+GMAT JupiterOrbit.ShowLabels = true;
+GMAT JupiterOrbit.ViewPointReference = Jupiter;
+GMAT JupiterOrbit.ViewPointVector = [ 0 0 90000000 ];
+GMAT JupiterOrbit.ViewDirection = Jupiter;
+GMAT JupiterOrbit.ViewScaleFactor = 1;
+GMAT JupiterOrbit.ViewUpCoordinateSystem = JupiterInertial;
+GMAT JupiterOrbit.ViewUpAxis = Z;
+GMAT JupiterOrbit.EclipticPlane = Off;
+GMAT JupiterOrbit.XYPlane = On;
+GMAT JupiterOrbit.WireFrame = Off;
+GMAT JupiterOrbit.Axes = On;
+GMAT JupiterOrbit.Grid = Off;
+GMAT JupiterOrbit.SunLine = Off;
+GMAT JupiterOrbit.UseInitialView = On;
+GMAT JupiterOrbit.StarCount = 7000;
+GMAT JupiterOrbit.EnableStars = On;
+GMAT JupiterOrbit.EnableConstellations = Off;
+
+Create OrbitView SaturnOrbit;
+GMAT SaturnOrbit.SolverIterations = Current;
+GMAT SaturnOrbit.UpperLeft = [ 0.5436583811344805 0.1359084406294707 ];
+GMAT SaturnOrbit.Size = [ 0.2224346717654557 0.4935622317596566 ];
+GMAT SaturnOrbit.RelativeZOrder = 908;
+GMAT SaturnOrbit.Maximized = false;
+GMAT SaturnOrbit.Add = {Cassini, Saturn};
+GMAT SaturnOrbit.CoordinateSystem = SaturnInertial;
+GMAT SaturnOrbit.DrawObject = [ true true ];
+GMAT SaturnOrbit.DataCollectFrequency = 1;
+GMAT SaturnOrbit.UpdatePlotFrequency = 10;
+GMAT SaturnOrbit.NumPointsToRedraw = 0;
+GMAT SaturnOrbit.ShowPlot = true;
+GMAT SaturnOrbit.MaxPlotPoints = 20000;
+GMAT SaturnOrbit.ShowLabels = true;
+GMAT SaturnOrbit.ViewPointReference = Saturn;
+GMAT SaturnOrbit.ViewPointVector = [ 0 0 60000000 ];
+GMAT SaturnOrbit.ViewDirection = Saturn;
+GMAT SaturnOrbit.ViewScaleFactor = 1;
+GMAT SaturnOrbit.ViewUpCoordinateSystem = SaturnInertial;
+GMAT SaturnOrbit.ViewUpAxis = Z;
+GMAT SaturnOrbit.EclipticPlane = Off;
+GMAT SaturnOrbit.XYPlane = On;
+GMAT SaturnOrbit.WireFrame = Off;
+GMAT SaturnOrbit.Axes = On;
+GMAT SaturnOrbit.Grid = Off;
+GMAT SaturnOrbit.SunLine = Off;
+GMAT SaturnOrbit.UseInitialView = On;
+GMAT SaturnOrbit.StarCount = 7000;
+GMAT SaturnOrbit.EnableStars = On;
+GMAT SaturnOrbit.EnableConstellations = Off;
+
+Create ReportFile DefaultReportFile;
+GMAT DefaultReportFile.SolverIterations = Current;
+GMAT DefaultReportFile.UpperLeft = [ 0 0 ];
+GMAT DefaultReportFile.Size = [ 0 0 ];
+GMAT DefaultReportFile.RelativeZOrder = 0;
+GMAT DefaultReportFile.Maximized = false;
+GMAT DefaultReportFile.Filename = 'DefaultReportFile.txt';
+GMAT DefaultReportFile.Precision = 16;
+GMAT DefaultReportFile.WriteHeaders = true;
+GMAT DefaultReportFile.LeftJustify = On;
+GMAT DefaultReportFile.ZeroFill = Off;
+GMAT DefaultReportFile.FixedWidth = true;
+GMAT DefaultReportFile.Delimiter = ' ';
+GMAT DefaultReportFile.ColumnWidth = 23;
+GMAT DefaultReportFile.WriteReport = true;
+
+Create OrbitView MarsOrbit;
+GMAT MarsOrbit.SolverIterations = Current;
+GMAT MarsOrbit.UpperLeft = [ 0.001912045889101338 0 ];
+GMAT MarsOrbit.Size = [ 0.5003186743148502 0.5350500715307582 ];
+GMAT MarsOrbit.RelativeZOrder = 920;
+GMAT MarsOrbit.Maximized = false;
+GMAT MarsOrbit.Add = {Cassini, Mars};
+GMAT MarsOrbit.CoordinateSystem = MarsInertial;
+GMAT MarsOrbit.DrawObject = [ true true ];
+GMAT MarsOrbit.DataCollectFrequency = 10;
+GMAT MarsOrbit.UpdatePlotFrequency = 50;
+GMAT MarsOrbit.NumPointsToRedraw = 0;
+GMAT MarsOrbit.ShowPlot = true;
+GMAT MarsOrbit.MaxPlotPoints = 20000;
+GMAT MarsOrbit.ShowLabels = true;
+GMAT MarsOrbit.ViewPointReference = Mars;
+GMAT MarsOrbit.ViewPointVector = [ 0 0 30000 ];
+GMAT MarsOrbit.ViewDirection = Mars;
+GMAT MarsOrbit.ViewScaleFactor = 1;
+GMAT MarsOrbit.ViewUpCoordinateSystem = MarsInertial;
+GMAT MarsOrbit.ViewUpAxis = Z;
+GMAT MarsOrbit.EclipticPlane = Off;
+GMAT MarsOrbit.XYPlane = On;
+GMAT MarsOrbit.WireFrame = Off;
+GMAT MarsOrbit.Axes = On;
+GMAT MarsOrbit.Grid = Off;
+GMAT MarsOrbit.SunLine = Off;
+GMAT MarsOrbit.UseInitialView = On;
+GMAT MarsOrbit.StarCount = 7000;
+GMAT MarsOrbit.EnableStars = On;
+GMAT MarsOrbit.EnableConstellations = Off;
+
+Create OrbitView VenusOrbit;
+GMAT VenusOrbit.SolverIterations = Current;
+GMAT VenusOrbit.UpperLeft = [ 0.2007648183556405 0.3118741058655222 ];
+GMAT VenusOrbit.Size = [ 0.5003186743148502 0.5350500715307582 ];
+GMAT VenusOrbit.RelativeZOrder = 910;
+GMAT VenusOrbit.Maximized = false;
+GMAT VenusOrbit.Add = {Cassini, Venus};
+GMAT VenusOrbit.CoordinateSystem = VenusInertial;
+GMAT VenusOrbit.DrawObject = [ true true ];
+GMAT VenusOrbit.DataCollectFrequency = 10;
+GMAT VenusOrbit.UpdatePlotFrequency = 50;
+GMAT VenusOrbit.NumPointsToRedraw = 0;
+GMAT VenusOrbit.ShowPlot = true;
+GMAT VenusOrbit.MaxPlotPoints = 20000;
+GMAT VenusOrbit.ShowLabels = true;
+GMAT VenusOrbit.ViewPointReference = Venus;
+GMAT VenusOrbit.ViewPointVector = [ 0 0 30000 ];
+GMAT VenusOrbit.ViewDirection = Venus;
+GMAT VenusOrbit.ViewScaleFactor = 1;
+GMAT VenusOrbit.ViewUpCoordinateSystem = VenusInertial;
+GMAT VenusOrbit.ViewUpAxis = Z;
+GMAT VenusOrbit.EclipticPlane = Off;
+GMAT VenusOrbit.XYPlane = On;
+GMAT VenusOrbit.WireFrame = Off;
+GMAT VenusOrbit.Axes = On;
+GMAT VenusOrbit.Grid = Off;
+GMAT VenusOrbit.SunLine = Off;
+GMAT VenusOrbit.UseInitialView = On;
+GMAT VenusOrbit.StarCount = 7000;
+GMAT VenusOrbit.EnableStars = On;
+GMAT VenusOrbit.EnableConstellations = Off;
+
+Create OrbitView EarthOrbit;
+GMAT EarthOrbit.SolverIterations = Current;
+GMAT EarthOrbit.UpperLeft = [ 0.03696622052262587 0.5951359084406295 ];
+GMAT EarthOrbit.Size = [ 0.5003186743148502 0.5350500715307582 ];
+GMAT EarthOrbit.RelativeZOrder = 928;
+GMAT EarthOrbit.Maximized = false;
+GMAT EarthOrbit.Add = {Cassini, Earth};
+GMAT EarthOrbit.CoordinateSystem = EarthInertial;
+GMAT EarthOrbit.DrawObject = [ true true ];
+GMAT EarthOrbit.DataCollectFrequency = 10;
+GMAT EarthOrbit.UpdatePlotFrequency = 50;
+GMAT EarthOrbit.NumPointsToRedraw = 0;
+GMAT EarthOrbit.ShowPlot = true;
+GMAT EarthOrbit.MaxPlotPoints = 20000;
+GMAT EarthOrbit.ShowLabels = true;
+GMAT EarthOrbit.ViewPointReference = Earth;
+GMAT EarthOrbit.ViewPointVector = [ 0 0 30000 ];
+GMAT EarthOrbit.ViewDirection = Earth;
+GMAT EarthOrbit.ViewScaleFactor = 1;
+GMAT EarthOrbit.ViewUpCoordinateSystem = EarthInertial;
+GMAT EarthOrbit.ViewUpAxis = Z;
+GMAT EarthOrbit.EclipticPlane = Off;
+GMAT EarthOrbit.XYPlane = On;
+GMAT EarthOrbit.WireFrame = Off;
+GMAT EarthOrbit.Axes = On;
+GMAT EarthOrbit.Grid = Off;
+GMAT EarthOrbit.SunLine = Off;
+GMAT EarthOrbit.UseInitialView = On;
+GMAT EarthOrbit.StarCount = 7000;
+GMAT EarthOrbit.EnableStars = On;
+GMAT EarthOrbit.EnableConstellations = Off;
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+Target DefaultDC {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = false};
+   Vary 'VaryX' DefaultDC(Cassini.X = -148931680.2832679, {Perturbation = 0.0001, Lower = -1.489416802832679E+08, Upper = -1.489216802832679E+08, MaxStep = 10000, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Vary 'VaryY' DefaultDC(Cassini.Y = 16155954.54555795, {Perturbation = 0.0001, Lower = 1.615495454555795E+07, Upper = 1.615695454555795E+07, MaxStep = 100001.615595454555795E+07, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Vary 'VaryZ' DefaultDC(Cassini.Z = 30634.025006474, {Perturbation = 0.0001, Lower = 3.063302500647400E+04, Upper = 3.063502500647400E+04, MaxStep = 10000, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Vary 'VaryVx' DefaultDC(Cassini.VX = -3.8047834692746, {Perturbation = 0.001, Lower = -3.80578346927460, Upper = -3.80378346927460, MaxStep = 0.1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Vary 'VaryVy' DefaultDC(Cassini.VY = -4, {Perturbation = 0.001, Lower = -4.001, Upper = -3.999, MaxStep = 0.1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Vary 'VaryVz' DefaultDC(Cassini.VZ = 0.0004954877820022574, {Perturbation = 0.001, Lower = 4.953877820022574E-04, Upper = 4.955877820022574E-04, MaxStep = 0.1, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Report DefaultReportFile Cassini.A1ModJulian;
+   Propagate 'Prop to Earth SOI Departure' EarthPM(Cassini) {Cassini.Earth.RMAG = 929000};
+   Report DefaultReportFile Cassini.A1ModJulian;
+   Propagate 'Prop to Venus SOI Arrival' VenusPM(Cassini) {Cassini.Venus.RMAG = 616000, StopTolerance = 1e-05, OrbitColor = [255 0 255]};
+   Report DefaultReportFile Cassini.A1ModJulian;
+   Propagate 'Prop to Venus Periapsis' VenusPM(Cassini) {Cassini.Venus.Periapsis, StopTolerance = 1e-05, OrbitColor = [255 0 0]};
+   Report DefaultReportFile Cassini.A1ModJulian;
+   Propagate 'Prop to SOI Departure' VenusPM(Cassini) {Cassini.Venus.RMAG = 616000, OrbitColor = [255 0 0]};
+   Report DefaultReportFile Cassini.A1ModJulian;
+   Propagate 'Prop to Jupiter SOI Arrival' SunPM(Cassini) {Cassini.Jupiter.RMAG = 48200000, StopTolerance = 1e-05, OrbitColor = [0 0 255]};
+   Report DefaultReportFile Cassini.A1ModJulian;
+   Propagate 'Prop to Jupiter Periapsis' DefaultProp(Cassini) {Cassini.ElapsedSecs = 12000.0};
+   Report DefaultReportFile Cassini.A1ModJulian;
+   Achieve 'AchieveRp' DefaultDC(Cassini.Jupiter.RadPer = 1000000, {Tolerance = 1});
+EndTarget;  % For targeter DefaultDC

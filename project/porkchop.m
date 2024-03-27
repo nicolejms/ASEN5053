@@ -25,8 +25,8 @@ opts = setvaropts(opts, ["CalendarDateTDB", "VarName9"], "WhitespaceRule", "pres
 opts = setvaropts(opts, ["CalendarDateTDB", "VarName9"], "EmptyFieldRule", "auto");
 %filename: "/Users/nicolejames/src/asen5050/asen5050/hwk/hwk6/HW6_Ephem_Earth.txt"
 % Import the data
-HW6EphemEarth = readtable("earth_ephem.txt", opts);
-HW6EphemMars = readtabl e("jupiter_ephem_mod.txt", opts);
+HW6EphemEarth = readtable("earth_short_eph.txt", opts);
+HW6EphemMars = readtable("jupiter_short_eph.txt", opts);
 
 
 R1 = [HW6EphemEarth.X, HW6EphemEarth.Y, HW6EphemEarth.Z];
@@ -65,7 +65,7 @@ figure(1)
 % peaks = fix(peaks);
 peaks = [3.9 4 4.1 4.2 4.3 4.5 4.7 5 5.5 6 7 8 13 20 30 45 60 61 62 63];
 
-contour(X,Y,VinfE.',peaks,'ShowText','on')
+contour(X(1:536),Y(1:366),VinfE.',peaks,'ShowText','on')
 xlabel("Earth Departure (Days past 6/20/2005)")
 ylabel("Mars Arrival (Days past 12/1/2005)")
 title("V-infinity of Earth Departures")
