@@ -40,7 +40,7 @@ Rmoon = 1738;
 Rsaturn = 60268;
 Rjupiter = 71492;
 Rvenus = 6052.0;
-Reuropa = 1561;
+Reuropa = 1565;
 
 % distance from sun
 AofEarthHelio = 1.0000010178;

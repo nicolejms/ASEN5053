@@ -25,8 +25,9 @@ opts = setvaropts(opts, ["CalendarDateTDB", "VarName9"], "WhitespaceRule", "pres
 opts = setvaropts(opts, ["CalendarDateTDB", "VarName9"], "EmptyFieldRule", "auto");
 %filename: "/Users/nicolejames/src/asen5050/asen5050/hwk/hwk6/HW6_Ephem_Earth.txt"
 % Import the data
-HW6EphemEarth = readtable("earth_short_eph.txt", opts);
-HW6EphemMars = readtable("jupiter_short_eph.txt", opts);
+
+HW6EphemEarth = readtable("earth_eph.txt", opts);
+HW6EphemMars = readtable("jupiter_eph_week.txt", opts);
 
 
 R1 = [HW6EphemEarth.X, HW6EphemEarth.Y, HW6EphemEarth.Z];
@@ -49,8 +50,9 @@ for i = 1:length(R1)
         r2 = R2(j,1:3);
         v2 = V2(j,1:3);
         [vinfe, vinfm] = lambert2(mu,r1,r2,v1,v2,TOF,path);
-        VinfE(i,j) = vinfe;
-        VinfM(i,j) = vinfm;
+
+        VinfE(i,j) = norm(vinfe);
+        VinfM(i,j) = norm(vinfm);
     end
 end
 
@@ -63,9 +65,10 @@ Y = HW6EphemMars.JDTDB(1:end) - HW6EphemMars.JDTDB(1);
 figure(1) 
 % peaks = VinfE(:); 
 % peaks = fix(peaks);
-peaks = [3.9 4 4.1 4.2 4.3 4.5 4.7 5 5.5 6 7 8 13 20 30 45 60 61 62 63];
 
 contour(X(1:536),Y(1:366),VinfE.',peaks,'ShowText','on')
+%peaks = [3.9 4 4.1 4.2 4.3 4.5 4.7 5 5.5 6 7 8 13 20 30 45 60 61 62 63];
+
 xlabel("Earth Departure (Days past 6/20/2005)")
 ylabel("Mars Arrival (Days past 12/1/2005)")
 title("V-infinity of Earth Departures")
@@ -78,8 +81,8 @@ set(gca,'XMinorTick','on','YMinorTick','on')
 figure(2) 
 % peaks = VinfM(:);
 % peaks = fix(peaks);
-peaks = [2 2.4 2.5 2.6 2.7 2.8 2.9 3 3.5 3.8 4 4.5 5 6 7 8 20 30 35 41 42  43 44];
-contour(X,Y,VinfM.',peaks,'ShowText','on')
+%peaks = [2 2.4 2.5 2.6 2.7 2.8 2.9 3 3.5 3.8 4 4.5 5 6 7 8 20 30 35 41 42  43 44];
+contour(X(1:748),Y,VinfM.',peaks,'ShowText','on')
 xlabel("Earth Departure (Days past 6/20/2005)")
 ylabel("Mars Arrival (Days past 12/1/2005)")
 title("V-infinity of Mars Arrivals")

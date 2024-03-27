@@ -90,7 +90,7 @@ function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
     deltaV2 = V2 - V2_i;
 
     deltav1 = norm(deltaV1);
-    deltav2 = norm(deltaV2);
+    deltav2 = norm(deltaV2); 
 
 end
 
