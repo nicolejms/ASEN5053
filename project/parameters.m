@@ -12,3 +12,8 @@ Isp = 250;
 Mass_final = 1000000    % final mass in lbs
 Mass_initial = 2000000  % initial mass in lbs
 
+% flyby information
+
+planet1 = "Earth"
+planet2  = "Mars"
+planet3 = "Jupiter"

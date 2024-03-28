@@ -60,8 +60,7 @@ end
 X = HW6EphemEarth.JDTDB(1:end) - HW6EphemEarth.JDTDB(1);   
 Y = HW6EphemMars.JDTDB(1:end) - HW6EphemMars.JDTDB(1); 
 
-% X = datetime(HW6EphemEarth.JDTDB,'convertfrom','juliandate')
-% Y = datetime(HW6EphemMars.JDTDB,'convertfrom','juliandate')
+
 figure(1) 
 % peaks = VinfE(:); 
 % peaks = fix(peaks);
@@ -69,8 +68,8 @@ figure(1)
 contour(X(1:748),Y(1:422),VinfE.','ShowText','on')
 %peaks = [3.9 4 4.1 4.2 4.3 4.5 4.7 5 5.5 6 7 8 13 20 30 45 60 61 62 63];
 
-xlabel("Earth Departure (Days past 6/20/2005)")
-ylabel("Jupiter Arrival (Days past 12/1/2005)")
+xlabel("Earth Departure (Days past 3/14/2024)")
+ylabel("Jupiter Arrival (Days past 3/26/2027)")
 title("V-infinity of Earth Departures")
 colormap winter;
 legend("V_\infty (km/s)", 'Location', 'northoutside','FontSize', 12)
@@ -83,9 +82,9 @@ figure(2)
 % peaks = fix(peaks);
 %peaks = [2 2.4 2.5 2.6 2.7 2.8 2.9 3 3.5 3.8 4 4.5 5 6 7 8 20 30 35 41 42  43 44];
 contour(X(1:748),Y(1:422),VinfM.','ShowText','on')
-xlabel("Earth Departure (Days past 6/20/2005)")
-ylabel("Jupiter Arrival (Days past 12/1/2005)")
-title("V-infinity of Mars Jupiter")
+xlabel("Earth Departure (Days past 3/14/2024)")
+ylabel("Jupiter Arrival (Days past 3/26/2027)")
+title("V-infinity of Jupiter Arrival")
 colormap turbo;
 legend("V_\infty (km/s)", 'Location', 'northoutside','FontSize', 12)
 %axis equal;

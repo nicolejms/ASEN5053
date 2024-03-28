@@ -1,4 +1,4 @@
-function [deltavtot,e, TOF] = hohmann(mu, periapsis, apoapsis)
+function [deltav1,deltav2,deltavtot,e, TOF] = hohmann(mu, periapsis, apoapsis)
 % UNTITLED5 Summary of this function goes here
 %   Hohmann transfer between two circular orbits
 init
