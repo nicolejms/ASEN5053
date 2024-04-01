@@ -24,7 +24,7 @@ function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
         TOFp = TOFp_minus(mu,s,c);
     end
     
-    if (TOF-TOFp > 0)       % transfer orbit is elliptical so  proceed
+    if (TOF*Day-TOFp > 0)       % transfer orbit is elliptical so  proceed
         % find TOFmin
         a_min = s/2;
         c_min = 4*a_min-r1-r2;

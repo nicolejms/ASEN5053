@@ -10,13 +10,13 @@ Create Spacecraft DefaultSC;
 GMAT DefaultSC.DateFormat = TDBGregorian;
 GMAT DefaultSC.Epoch = '01 Sep 2024 12:00:32.184';
 GMAT DefaultSC.CoordinateSystem = EarthMJ2000Eq;
-GMAT DefaultSC.DisplayStateType = Cartesian;
-GMAT DefaultSC.X = 7100;
-GMAT DefaultSC.Y = 0;
-GMAT DefaultSC.Z = 1300;
-GMAT DefaultSC.VX = 0;
-GMAT DefaultSC.VY = 7.35;
-GMAT DefaultSC.VZ = 1;
+GMAT DefaultSC.DisplayStateType = Keplerian;
+GMAT DefaultSC.SMA = 7000;
+GMAT DefaultSC.ECC = 0;
+GMAT DefaultSC.INC = 0;
+GMAT DefaultSC.RAAN = 0;
+GMAT DefaultSC.AOP = 0;
+GMAT DefaultSC.TA = 0;
 GMAT DefaultSC.DryMass = 850;
 GMAT DefaultSC.Cd = 2.2;
 GMAT DefaultSC.Cr = 1.8;
@@ -57,19 +57,6 @@ GMAT DefaultSC.EulerAngleSequence = '321';
 %---------- ForceModels
 %----------------------------------------
 
-Create ForceModel DefaultProp_ForceModel;
-GMAT DefaultProp_ForceModel.CentralBody = Earth;
-GMAT DefaultProp_ForceModel.PrimaryBodies = {Earth};
-GMAT DefaultProp_ForceModel.Drag = None;
-GMAT DefaultProp_ForceModel.SRP = Off;
-GMAT DefaultProp_ForceModel.RelativisticCorrection = Off;
-GMAT DefaultProp_ForceModel.ErrorControl = RSSStep;
-GMAT DefaultProp_ForceModel.GravityField.Earth.Degree = 4;
-GMAT DefaultProp_ForceModel.GravityField.Earth.Order = 4;
-GMAT DefaultProp_ForceModel.GravityField.Earth.StmLimit = 100;
-GMAT DefaultProp_ForceModel.GravityField.Earth.PotentialFile = 'JGM2.cof';
-GMAT DefaultProp_ForceModel.GravityField.Earth.TideModel = 'None';
-
 Create ForceModel SunPM_ForceModel;
 GMAT SunPM_ForceModel.CentralBody = Sun;
 GMAT SunPM_ForceModel.PointMasses = {Sun};
@@ -78,6 +65,21 @@ GMAT SunPM_ForceModel.SRP = Off;
 GMAT SunPM_ForceModel.RelativisticCorrection = Off;
 GMAT SunPM_ForceModel.ErrorControl = RSSStep;
 
+
+
+
+%----------------------------------------
+%---------- ForceModels
+%----------------------------------------
+
+Create ForceModel DefaultProp_ForceModel;
+GMAT DefaultProp_ForceModel.CentralBody = Earth;
+GMAT DefaultProp_ForceModel.PointMasses = {Earth};
+GMAT DefaultProp_ForceModel.Drag = None;
+GMAT DefaultProp_ForceModel.SRP = Off;
+GMAT DefaultProp_ForceModel.RelativisticCorrection = Off;
+GMAT DefaultProp_ForceModel.ErrorControl = RSSStep;
+
 Create ForceModel JupiterPM_ForceModel;
 GMAT JupiterPM_ForceModel.CentralBody = Jupiter;
 GMAT JupiterPM_ForceModel.PointMasses = {Jupiter};
@@ -85,6 +87,14 @@ GMAT JupiterPM_ForceModel.Drag = None;
 GMAT JupiterPM_ForceModel.SRP = Off;
 GMAT JupiterPM_ForceModel.RelativisticCorrection = Off;
 GMAT JupiterPM_ForceModel.ErrorControl = RSSStep;
+
+Create ForceModel Propagator1_ForceModel;
+GMAT Propagator1_ForceModel.CentralBody = Sun;
+GMAT Propagator1_ForceModel.PointMasses = {Sun};
+GMAT Propagator1_ForceModel.Drag = None;
+GMAT Propagator1_ForceModel.SRP = Off;
+GMAT Propagator1_ForceModel.RelativisticCorrection = Off;
+GMAT Propagator1_ForceModel.ErrorControl = RSSStep;
 
 %----------------------------------------
 %---------- Propagators
@@ -98,7 +108,7 @@ GMAT DefaultProp.Accuracy = 9.999999999999999e-12;
 GMAT DefaultProp.MinStep = 0.001;
 GMAT DefaultProp.MaxStep = 2700;
 GMAT DefaultProp.MaxStepAttempts = 50;
-GMAT DefaultProp.StopIfAccuracyIsViolated = true
+GMAT DefaultProp.StopIfAccuracyIsViolated = true;
 
 Create Propagator JupiterPM;
 GMAT JupiterPM.FM = JupiterPM_ForceModel;
@@ -109,6 +119,16 @@ GMAT JupiterPM.MinStep = 0.001;
 GMAT JupiterPM.MaxStep = 2700;
 GMAT JupiterPM.MaxStepAttempts = 50;
 GMAT JupiterPM.StopIfAccuracyIsViolated = true;
+
+Create Propagator SunPM;
+GMAT SunPM.FM = Propagator1_ForceModel;
+GMAT SunPM.Type = RungeKutta89;
+GMAT SunPM.InitialStepSize = 60;
+GMAT SunPM.Accuracy = 9.999999999999999e-12;
+GMAT SunPM.MinStep = 0.001;
+GMAT SunPM.MaxStep = 2700;
+GMAT SunPM.MaxStepAttempts = 50;
+GMAT SunPM.StopIfAccuracyIsViolated = true;
 
 %----------------------------------------
 %---------- Burns
@@ -170,25 +190,25 @@ GMAT DC1.Algorithm = NewtonRaphson;
 
 Create OrbitView DefaultOrbitView;
 GMAT DefaultOrbitView.SolverIterations = Current;
-GMAT DefaultOrbitView.UpperLeft = [ 0.002941176470588235 0 ];
-GMAT DefaultOrbitView.Size = [ 0.7394117647058823 0.8978365384615384 ];
-GMAT DefaultOrbitView.RelativeZOrder = 478;
+GMAT DefaultOrbitView.UpperLeft = [ 0.001273885350318471 0 ];
+GMAT DefaultOrbitView.Size = [ 0.7394904458598726 0.8978494623655914 ];
+GMAT DefaultOrbitView.RelativeZOrder = 2225;
 GMAT DefaultOrbitView.Maximized = false;
-GMAT DefaultOrbitView.Add = {DefaultSC, Earth};
-GMAT DefaultOrbitView.CoordinateSystem = EarthMJ2000Eq;
+GMAT DefaultOrbitView.Add = {DefaultSC, Sun};
+GMAT DefaultOrbitView.CoordinateSystem = SunInertial;
 GMAT DefaultOrbitView.DrawObject = [ true true ];
-GMAT DefaultOrbitView.DataCollectFrequency = 1;
+GMAT DefaultOrbitView.DataCollectFrequency = 100;
 GMAT DefaultOrbitView.UpdatePlotFrequency = 50;
 GMAT DefaultOrbitView.NumPointsToRedraw = 0;
 GMAT DefaultOrbitView.ShowPlot = true;
 GMAT DefaultOrbitView.MaxPlotPoints = 20000;
 GMAT DefaultOrbitView.ShowLabels = true;
-GMAT DefaultOrbitView.ViewPointReference = Earth;
-GMAT DefaultOrbitView.ViewPointVector = [ 0 0 120000 ];
-GMAT DefaultOrbitView.ViewDirection = Earth;
+GMAT DefaultOrbitView.ViewPointReference = Sun;
+GMAT DefaultOrbitView.ViewPointVector = [ 0 0 792880000 ];
+GMAT DefaultOrbitView.ViewDirection = Sun;
 GMAT DefaultOrbitView.ViewScaleFactor = 1;
-GMAT DefaultOrbitView.ViewUpCoordinateSystem = EarthMJ2000Eq;
-GMAT DefaultOrbitView.ViewUpAxis = X;
+GMAT DefaultOrbitView.ViewUpCoordinateSystem = SunInertial;
+GMAT DefaultOrbitView.ViewUpAxis = Z;
 GMAT DefaultOrbitView.EclipticPlane = Off;
 GMAT DefaultOrbitView.XYPlane = On;
 GMAT DefaultOrbitView.WireFrame = Off;
@@ -202,9 +222,9 @@ GMAT DefaultOrbitView.EnableConstellations = Off;
 
 Create GroundTrackPlot DefaultGroundTrackPlot;
 GMAT DefaultGroundTrackPlot.SolverIterations = Current;
-GMAT DefaultGroundTrackPlot.UpperLeft = [ 0.002941176470588235 0.4543269230769231 ];
-GMAT DefaultGroundTrackPlot.Size = [ 0.5 0.4495192307692308 ];
-GMAT DefaultGroundTrackPlot.RelativeZOrder = 57;
+GMAT DefaultGroundTrackPlot.UpperLeft = [ 0.001273885350318471 0.4502688172043011 ];
+GMAT DefaultGroundTrackPlot.Size = [ 0.5 0.4489247311827957 ];
+GMAT DefaultGroundTrackPlot.RelativeZOrder = 2220;
 GMAT DefaultGroundTrackPlot.Maximized = false;
 GMAT DefaultGroundTrackPlot.Add = {DefaultSC};
 GMAT DefaultGroundTrackPlot.DataCollectFrequency = 1;
@@ -221,13 +241,14 @@ GMAT DefaultGroundTrackPlot.TextureMap = 'ModifiedBlueMarble.jpg';
 %----------------------------------------
 
 BeginMissionSequence;
-Propagate 'ParkingOrbit' DefaultProp(DefaultSC) {DefaultSC.Earth.Periapsis, OrbitColor = [255 0 0]};
+Propagate 'ParkingOrbit' DefaultProp(DefaultSC) {DefaultSC.Earth.RMAG = 7000, OrbitColor = [255 0 0]};
 Target 'HohmannTransferOrbit' DC1 {SolveMode = Solve, ExitMode = DiscardAndContinue, ShowProgressWindow = true};
-   Vary 'VariTOI' DC1(TransferOrbitInsertion.Element1 = 1, {Perturbation = .001, Lower = 0.0, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Vary 'VariTOI' DC1(TransferOrbitInsertion.Element1 = 1, {Perturbation = .01, Lower = 0.0, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
    Maneuver 'PerformTOI' TransferOrbitInsertion(DefaultSC);
-   Propagate 'GoToApoapsis' DefaultProp(DefaultSC) {DefaultSC.Sun.Apoapsis, OrbitColor = [0 255 128]};
-   Achieve 'AchieveRMAG' DC1(DefaultSC.Jupiter.ECC = .005, {Tolerance = 0.1});
+   Propagate 'Enter transfer orbit' DefaultProp(DefaultSC) {DefaultSC.Sun.ECC = .6776, OrbitColor = [255 0 0]};
+   Propagate 'travel to apoapsis' DefaultProp(DefaultSC) {DefaultSC.Sun.Apoapsis, OrbitColor = [0 255 128]};
    Vary 'VaryFOI' DC1(FinalOrbitInsertion.Element1 = 1, {Perturbation = 0.001, Lower = 0.0, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
    Maneuver 'PerformFOI' FinalOrbitInsertion(DefaultSC);
+   Achieve DC1(DefaultSC.Jupiter.RMAG = 1000000, {Tolerance = 1});
 EndTarget;  % For targeter DC1
-Propagate 'FinalOrbit' DefaultProp(DefaultSC) {DefaultSC.ElapsedSecs = 120000, OrbitColor = [0 0 255]};
+Propagate 'FinalOrbit' SunPM(DefaultSC) {DefaultSC.Jupiter.RMAG = 1000000, OrbitColor = [0 255 0]};

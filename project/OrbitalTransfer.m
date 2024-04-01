@@ -1,5 +1,6 @@
 % Patched Conics calculation script
-
+clear
+init
 %% Parameters
 % Constants
 au = 1.496e8; % km
@@ -61,6 +62,11 @@ aHypEarth = -muEarth/vInfEarth^2;
 aHypJupiter = -muJupiter/vInfJupiter^2;
 aHypEuropa = -muEuropa/vInfEuropa^2;
 
+% Hyperbolic eccentricities
+eHypEarth = ecchfromArp(aHypEarth,rEarthSC)
+eHypJupiter = EccfromArp(aHypJupiter,rJupiterSC)
+
+
 % Hyperbolic periapsis velocities
 vHypPeriEarth = sqrt(2*muEarth/rEarthSC - muEarth/aHypEarth);
 vHypPeriJupiter = sqrt(2*muJupiter/rJupiterSC - muJupiter/aHypJupiter);
@@ -76,5 +82,52 @@ dvTotal = dvEarth+dvJupiter+dvEuropa;
 disp(dvTotal);
 
 
+
+%% bielliptic transfer 
+
+aIntermed = 2*AU; 
+% Earth-to-Intermediate orbit bielliptic transfer
+aBiEarthToIntermed = (aEarth+aIntermed)/2;
+vBiEarth = sqrt(2*muSun/aEarth - muSun/aBiEarthToIntermed);
+vBiInterIn = sqrt(2*muSun/aIntermed - muSun/aBiEarthToIntermed);
+
+% Intermediate-to-Jupiter bielliptic transfer
+aBiIntermedToJupiter = (aJupiter+aIntermed)/2;
+vBiIntermed = sqrt(2*muSun/aIntermed - muSun/aBiIntermedToJupiter);
+vBiJupiterIn = sqrt(2*muSun/aJupiter - muSun/aBiIntermedToJupiter);
+
+% Jupiter-to-Europa Hohmann transfer
+aJupiterToEuropa = (rJupiterSC+aEuropa)/2;
+vBiJupiterOut = sqrt(2*muJupiter/rJupiterSC - muJupiter/aJupiterToEuropa);
+vBiEuropa = sqrt(2*muJupiter/aEuropa - muJupiter/aJupiterToEuropa);
+
+% Hyperbolic excess velocities
+vInfBiEarth = vBiEarth-vCircEarth;
+vInfBiIntermed = vBiIntermed-vBiInterIn;
+vInfBiJupiter = vCircJupiter-vBiJupiterIn;
+vInfEuropa = vHohEuropa-vCircEuropa;
+
+% Hyperbolic semi-major axes
+aBiHypEarth = -muEarth/vInfBiEarth^2;
+aBiHypJupiter = -muJupiter/vInfBiJupiter^2;
+aHypEuropa = -muEuropa/vInfEuropa^2;
+
+% Hyperbolic eccentricities
+eHypBiEarth = ecchfromArp(aBiHypEarth,rEarthSC);
+eHypBiJupiter = EccfromArp(aBiHypJupiter,rJupiterSC);
+
+% Hyperbolic periapsis velocities
+vHypBiPeriEarth = sqrt(2*muEarth/rEarthSC - muEarth/aBiHypEarth);
+vHypBiPeriJupiter = sqrt(2*muJupiter/rJupiterSC - muJupiter/aBiHypJupiter);
+vHypBiPeriEuropa = sqrt(2*muEuropa/rEuropaSC - muEuropa/aHypEuropa);
+
+% Delta-v's
+dvBiEarth = vHypBiPeriEarth-vCircEarthSC;
+dvBiJupiter = abs(vBiJupiterOut-vHypBiPeriJupiter);
+dvBiEuropa = abs(vCircEuropaSC-vHypBiPeriEuropa);
+
+% Total Delta-v
+dvBiTotal = dvBiEarth+vInfBiIntermed+dvBiJupiter+dvBiEuropa;
+disp(dvBiTotal);
 
 

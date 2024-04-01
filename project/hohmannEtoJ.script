@@ -1,0 +1,184 @@
+%General Mission Analysis Tool(GMAT) Script
+%Created: 2024-03-29 20:48:39
+
+
+%----------------------------------------
+%---------- Spacecraft
+%----------------------------------------
+
+Create Spacecraft Spacecraft1;
+GMAT Spacecraft1.DateFormat = TAIModJulian;
+GMAT Spacecraft1.Epoch = '21545';
+GMAT Spacecraft1.CoordinateSystem = SunFixed;
+GMAT Spacecraft1.DisplayStateType = Keplerian;
+GMAT Spacecraft1.SMA = 464059199.9999932;
+GMAT Spacecraft1.ECC = 0.6775999999999951;
+GMAT Spacecraft1.INC = 0;
+GMAT Spacecraft1.RAAN = 0;
+GMAT Spacecraft1.AOP = 0;
+GMAT Spacecraft1.TA = 360;
+GMAT Spacecraft1.DryMass = 850;
+GMAT Spacecraft1.Cd = 2.2;
+GMAT Spacecraft1.Cr = 1.8;
+GMAT Spacecraft1.DragArea = 15;
+GMAT Spacecraft1.SRPArea = 1;
+GMAT Spacecraft1.SPADDragScaleFactor = 1;
+GMAT Spacecraft1.SPADSRPScaleFactor = 1;
+GMAT Spacecraft1.AtmosDensityScaleFactor = 1;
+GMAT Spacecraft1.ExtendedMassPropertiesModel = 'None';
+GMAT Spacecraft1.NAIFId = -10020001;
+GMAT Spacecraft1.NAIFIdReferenceFrame = -9020001;
+GMAT Spacecraft1.OrbitColor = Red;
+GMAT Spacecraft1.TargetColor = Teal;
+GMAT Spacecraft1.OrbitErrorCovariance = [ 1e+70 0 0 0 0 0 ; 0 1e+70 0 0 0 0 ; 0 0 1e+70 0 0 0 ; 0 0 0 1e+70 0 0 ; 0 0 0 0 1e+70 0 ; 0 0 0 0 0 1e+70 ];
+GMAT Spacecraft1.CdSigma = 1e+70;
+GMAT Spacecraft1.CrSigma = 1e+70;
+GMAT Spacecraft1.Id = 'SatId';
+GMAT Spacecraft1.Attitude = CoordinateSystemFixed;
+GMAT Spacecraft1.SPADSRPInterpolationMethod = Bilinear;
+GMAT Spacecraft1.SPADSRPScaleFactorSigma = 1e+70;
+GMAT Spacecraft1.SPADDragInterpolationMethod = Bilinear;
+GMAT Spacecraft1.SPADDragScaleFactorSigma = 1e+70;
+GMAT Spacecraft1.AtmosDensityScaleFactorSigma = 1e+70;
+GMAT Spacecraft1.ModelFile = 'aura.3ds';
+GMAT Spacecraft1.ModelOffsetX = 0;
+GMAT Spacecraft1.ModelOffsetY = 0;
+GMAT Spacecraft1.ModelOffsetZ = 0;
+GMAT Spacecraft1.ModelRotationX = 0;
+GMAT Spacecraft1.ModelRotationY = 0;
+GMAT Spacecraft1.ModelRotationZ = 0;
+GMAT Spacecraft1.ModelScale = 1;
+GMAT Spacecraft1.AttitudeDisplayStateType = 'Quaternion';
+GMAT Spacecraft1.AttitudeRateDisplayStateType = 'AngularVelocity';
+GMAT Spacecraft1.AttitudeCoordinateSystem = EarthMJ2000Eq;
+GMAT Spacecraft1.EulerAngleSequence = '321';
+
+%----------------------------------------
+%---------- ForceModels
+%----------------------------------------
+
+Create ForceModel JupiterPM_ForceModel;
+GMAT JupiterPM_ForceModel.CentralBody = Jupiter;
+GMAT JupiterPM_ForceModel.PointMasses = {Jupiter};
+GMAT JupiterPM_ForceModel.Drag = None;
+GMAT JupiterPM_ForceModel.SRP = Off;
+GMAT JupiterPM_ForceModel.RelativisticCorrection = Off;
+GMAT JupiterPM_ForceModel.ErrorControl = RSSStep;
+
+Create ForceModel EarthPM_ForceModel;
+GMAT EarthPM_ForceModel.CentralBody = Earth;
+GMAT EarthPM_ForceModel.PointMasses = {Earth};
+GMAT EarthPM_ForceModel.Drag = None;
+GMAT EarthPM_ForceModel.SRP = Off;
+GMAT EarthPM_ForceModel.RelativisticCorrection = Off;
+GMAT EarthPM_ForceModel.ErrorControl = RSSStep;
+
+Create ForceModel SunPM_ForceModel;
+GMAT SunPM_ForceModel.CentralBody = Sun;
+GMAT SunPM_ForceModel.PointMasses = {Sun};
+GMAT SunPM_ForceModel.Drag = None;
+GMAT SunPM_ForceModel.SRP = Off;
+GMAT SunPM_ForceModel.RelativisticCorrection = Off;
+GMAT SunPM_ForceModel.ErrorControl = RSSStep;
+
+%----------------------------------------
+%---------- Propagators
+%----------------------------------------
+
+Create Propagator JupiterPM;
+GMAT JupiterPM.FM = JupiterPM_ForceModel;
+GMAT JupiterPM.Type = RungeKutta89;
+GMAT JupiterPM.InitialStepSize = 60;
+GMAT JupiterPM.Accuracy = 9.999999999999999e-12;
+GMAT JupiterPM.MinStep = 0.001;
+GMAT JupiterPM.MaxStep = 2700;
+GMAT JupiterPM.MaxStepAttempts = 50;
+GMAT JupiterPM.StopIfAccuracyIsViolated = true;
+
+Create Propagator EarthPM;
+GMAT EarthPM.FM = EarthPM_ForceModel;
+GMAT EarthPM.Type = RungeKutta89;
+GMAT EarthPM.InitialStepSize = 60;
+GMAT EarthPM.Accuracy = 9.999999999999999e-12;
+GMAT EarthPM.MinStep = 0.001;
+GMAT EarthPM.MaxStep = 2700;
+GMAT EarthPM.MaxStepAttempts = 50;
+GMAT EarthPM.StopIfAccuracyIsViolated = true;
+
+Create Propagator SunPM;
+GMAT SunPM.FM = SunPM_ForceModel;
+GMAT SunPM.Type = RungeKutta89;
+GMAT SunPM.InitialStepSize = 60;
+GMAT SunPM.Accuracy = 9.999999999999999e-12;
+GMAT SunPM.MinStep = 0.001;
+GMAT SunPM.MaxStep = 2700;
+GMAT SunPM.MaxStepAttempts = 50;
+GMAT SunPM.StopIfAccuracyIsViolated = true;
+
+%----------------------------------------
+%---------- Burns
+%----------------------------------------
+
+Create ImpulsiveBurn ImpulsiveBurn1;
+GMAT ImpulsiveBurn1.CoordinateSystem = Local;
+GMAT ImpulsiveBurn1.Origin = Earth;
+GMAT ImpulsiveBurn1.Axes = VNB;
+GMAT ImpulsiveBurn1.Element1 = 6.2938;
+GMAT ImpulsiveBurn1.Element2 = 0;
+GMAT ImpulsiveBurn1.Element3 = 0;
+GMAT ImpulsiveBurn1.DecrementMass = false;
+GMAT ImpulsiveBurn1.Isp = 300;
+GMAT ImpulsiveBurn1.GravitationalAccel = 9.81;
+
+Create ImpulsiveBurn ImpulsiveBurn2;
+GMAT ImpulsiveBurn2.CoordinateSystem = Local;
+GMAT ImpulsiveBurn2.Origin = Jupiter;
+GMAT ImpulsiveBurn2.Axes = VNB;
+GMAT ImpulsiveBurn2.Element1 = 6.8375;
+GMAT ImpulsiveBurn2.Element2 = 0;
+GMAT ImpulsiveBurn2.Element3 = 0;
+GMAT ImpulsiveBurn2.DecrementMass = false;
+GMAT ImpulsiveBurn2.Isp = 300;
+GMAT ImpulsiveBurn2.GravitationalAccel = 9.81;
+
+%----------------------------------------
+%---------- Coordinate Systems
+%----------------------------------------
+
+Create CoordinateSystem JupiterFixed;
+GMAT JupiterFixed.Origin = Jupiter;
+GMAT JupiterFixed.Axes = BodyFixed;
+
+Create CoordinateSystem SunFixed;
+GMAT SunFixed.Origin = Sun;
+GMAT SunFixed.Axes = BodyFixed;
+
+%----------------------------------------
+%---------- Solvers
+%----------------------------------------
+
+Create DifferentialCorrector DefaultDC;
+GMAT DefaultDC.ShowProgress = true;
+GMAT DefaultDC.ReportStyle = Normal;
+GMAT DefaultDC.ReportFile = 'DifferentialCorrectorDefaultDC.data';
+GMAT DefaultDC.MaximumIterations = 25;
+GMAT DefaultDC.DerivativeMethod = ForwardDifference;
+GMAT DefaultDC.Algorithm = NewtonRaphson;
+
+
+%----------------------------------------
+%---------- Mission Sequence
+%----------------------------------------
+
+BeginMissionSequence;
+Propagate 'ParkingOrbit' DefaultProp(DefaultSC) {Spacecraft1.Sun.Periapsis, OrbitColor = [255 0 0]};
+Target 'HohmannTransferOrbit' DC1 {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true};
+   Vary 'VariTOI' DC1(TransferOrbitInsertion.Element1 = 1, {Perturbation = .001, Lower = 0.0, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Maneuver 'PerformTOI' TransferOrbitInsertion(DefaultSC);
+   Propagate 'GoToApoapsis' DefaultProp(DefaultSC) {DefaultSC.Sun.Apoapsis, OrbitColor = [0 255 128]};
+   Achieve 'AchieveRMAG' DC1(DefaultSC.Jupiter.ECC = .005, {Tolerance = 0.1});
+   Vary 'VaryFOI' DC1(FinalOrbitInsertion.Element1 = 1, {Perturbation = 0.001, Lower = 0.0, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Maneuver 'PerformFOI' FinalOrbitInsertion(DefaultSC);
+EndTarget;  % For targeter DC1
+Propagate 'FinalOrbit' DefaultProp(DefaultSC) {DefaultSC.ElapsedSecs = 120000, OrbitColor = [0 0 255]};
+

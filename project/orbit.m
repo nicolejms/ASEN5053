@@ -84,7 +84,6 @@ opts.Delimiter = ["\t", ","];
 % Specify column names and types
 opts.VariableNames = ["JDTDB", "CalendarDateTDB", "X", "Y", "Z", "VX", "VY", "VZ", "VarName9"];
 opts.VariableTypes = ["double", "string", "double", "double", "double", "double", "double", "double", "string"];
-g
 % Specify file level properties
 opts.ExtraColumnsRule = "ignore";
 opts.EmptyLineRule = "read";
