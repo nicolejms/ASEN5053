@@ -85,7 +85,7 @@ disp(dvTotal);
 
 %% bielliptic transfer 
 
-aIntermed = 2*AU; 
+aIntermed = 2.3519e+08; 
 % Earth-to-Intermediate orbit bielliptic transfer
 aBiEarthToIntermed = (aEarth+aIntermed)/2;
 vBiEarth = sqrt(2*muSun/aEarth - muSun/aBiEarthToIntermed);
