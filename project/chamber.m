@@ -1,5 +1,5 @@
 clc;
-clear all;
+%clear all;
 close all;
 
 g0 = 9.81; %m/s
