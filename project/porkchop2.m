@@ -5,13 +5,13 @@ init;
 mu = Gsun;
 path = "short";
 % generate date time arrays
-t1Earth = datetime(2024,6,1,0,0,0);
-t2Earth = datetime(2028,6,1,0,0,0);
-tEarth = t1Earth:caldays(2):t2Earth;
+t1Earth = datetime(2005,6,20,0,0,0);
+t2Earth = datetime(2005,9,20,0,0,0);
+tEarth = t1Earth:caldays(1):t2Earth;
 
-t1Jupiter = datetime(2026,12,1,0,0,0);
-t2Jupiter = datetime(2031,12,1,0,0,0);
-tJupiter = t1Jupiter:caldays(4):t2Jupiter;
+t1Jupiter = datetime(2005,12,1,0,0,0);
+t2Jupiter = datetime(2006,6,19,0,0,0);
+tJupiter = t1Jupiter:caldays(2):t2Jupiter;
 
 % R1 = [HW6EphemEarth.X, HW6EphemEarth.Y, HW6EphemEarth.Z];
 % V1 = [HW6EphemEarth.VX, HW6EphemEarth.VY, HW6EphemEarth.VZ];
@@ -23,7 +23,7 @@ dvE = []; dvM = []; TOFf = [];Epochs = [];R1 = [];R2 = [];V1 = []; V2 = [];
 k = 1;
 for i = 1:length(tEarth)
     [r1,v1] = planetEphemeris(juliandate(tEarth(i)),'Sun','Earth',430);
-    R1 = [R1;r1];
+    R1 = [R1;r1]
     V1 = [V1;v1];
     for j = 1:length(tJupiter)
         TOF = juliandate(tJupiter(j)) - juliandate(tEarth(i));
@@ -31,7 +31,7 @@ for i = 1:length(tEarth)
             disp("invalid TOF");
             break;    
         end
-        [r2,v2] = planetEphemeris(juliandate(tJupiter(i)),'Sun','Jupiter',430);
+        [r2,v2] = planetEphemeris(juliandate(tJupiter(i)),'Sun','Mars',430);
         R2 = [R2;r2];
         V2 = [V2;v2];
         [vinfe, vinfm] = lambert2(mu,r1,r2,v1,v2,TOF,path);
@@ -42,7 +42,7 @@ for i = 1:length(tEarth)
 end
 
 
-X = R1.JDTDB(1:end) - HW6EphemEarth.JDTDB(1);   
+X = R1.JDTDB(1:end) - R1.JDTDB(1);   
 Y = HW6EphemMars.JDTDB(1:end) - HW6EphemMars.JDTDB(1); 
 
 
@@ -50,7 +50,7 @@ figure(1)
 % peaks = VinfE(:); 
 % peaks = fix(peaks);
 
-contour(X(1:748),Y(1:422),VinfE.','ShowText','on')
+contour(X(1:127),Y(1:422),VinfE.','ShowText','on')
 %peaks = [3.9 4 4.1 4.2 4.3 4.5 4.7 5 5.5 6 7 8 13 20 30 45 60 61 62 63];
 
 xlabel("Earth Departure (Days past 3/14/2024)")

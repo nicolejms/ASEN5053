@@ -1,0 +1,190 @@
+clc
+clear
+close all 
+Index_P = 7;
+% mission parameters
+OFratio = 1.9;          % oxidizer to fuel ratio
+Ftotal = 252577;        % total thrust N
+ContractionRatio = 3;   % contraction ratio between chamber and throat area
+ConvergenceAngle = 45;        % angle of convergence
+Isp = 325;              % specific impulse sec
+TstayMin = 0.01;        % min 10 ms time in chamber
+ContractionAngle = 45;
+ExpansionRatio = 30;
+HalfConeAngle = 15;
+Cd = 0.80;               % Cd for injectors table 8-2
+dPinjFrac = 0.20;           % pressure drop across injectors
+numInjMmh = 100;
+numInjNto = 50;
+EfficiencyFactor = 0.98  ;
+
+% constants
+Rc = 8.3144;            % gas contant J/ Kmol
+g0 = 9.806;             % gravitational constant m/s^2
+MwMmh = 0.046074 ;      % mol weight mmh
+MwNto = 0.09201;        % mol weight nto
+k_mmh = 1.1558;         % ratio of specific heats for MM
+atm2pascal = 101325;    % atm to pascal conversion factor
+rhoMmh = 874;         % density MMH kg/^3
+rhoNto = 1450;           % density NTO kg/m^3
+
+% from CEARun
+k_mixture = 1.1537;     % from CEARun
+MwMix = 0.02186;        % kg/mol
+R = Rc/MwMix            % J/kg K 
+
+PchamberAtm = 20:10:100;    % chamber pressure range 20-100 atm
+Pchamber = PchamberAtm.*atm2pascal;
+Tchamber = [3220.22 3258.05 3284.18 3303.99 3319.86 3333.03 3344.26 3354.01 3362.61];
+RhoChamber = [1.6366 2.4345 3.2275 4.0172 4.8043 5.5893 6.3726 7.1545 7.9351 ];
+Cvac = [3260.7 3263.3 3265.1 3266.3 3267.3 3268.1 3268.8 3269.3 3269.8 ];
+% equations %
+
+% Area of the throat
+AtfromK = @(mdot,k,T1,P1,R) (mdot./(P1*k)).*((sqrt(k*R.*T1))/(sqrt(((2/(k+1))^((k+1)/(k-1)))))); %[m^2]
+AtfromCstar = @(mdot,Cstar,P1) mdot*Cstar/P1;
+
+% characteristic chamber length
+LstarfromVol = @(Vol,At) Vol./At;
+LstarfromMdot = @(mdot,At,rho,tstay) (mdot*tstay/g0)./(At.*rho);
+
+% stay time
+TstayfromMdot = @(Vol,mdot,density) Vol*density/mdot;
+
+% chamber volume
+VolCcfromAreas = @(A1,At,L1,Lc) A1*L1 + A1*Lc*(1+sqrt(At/A1) + At/A1);
+VolCcfromTs = @(mdot,rho,tstay) mdot*tstay./(rho*g0);
+
+% Thrust
+FfromCstar = @(mdot,Cstar,Cf) mdot*Cstar*Cf;
+FfromV2 = @(mdot,V2,P2,A2) mdot*V2 + P2*A2;
+
+% Effective exhaust velocity
+CfromV2 = @(V2,P2,mdot) V2 + P2/mdot;
+CfromIsp = @(Isp) Isp *g0;
+
+% mass flow rate
+MdotfromAt = @(Pc,At,Cstar) Pc*At/Cstar;
+MdotfromCF = @(F,C) F/C;
+
+% characteristic velocity
+CstarfromC = @(c,Cf) c/Cf;
+CstarfromAt = @(P1,At,mdot) P1.*At./mdot;
+CstarfromK = @(k,T1,R) sqrt(k*R*T1)/(k*sqrt((2/(k+1))^(k+1/(k-1))));
+
+% injector area
+Ainj = @(mdot,Cd,rho,dp) mdot./(Cd*sqrt(2*rho.*dp));
+Vinj = @(Cd,rho,dp) Cd*sqrt(2*dp/rho);
+% calculations %
+
+% find mass flow rate
+mdot = Ftotal./Cvac;
+
+% calc area of throat and combustion chamber from k and mdot
+At = AtfromK(mdot,k_mixture,Tchamber,Pchamber,R);  % area of throat
+Dt = sqrt((4*At)/pi)    ;                            % diameter of throat
+Acc = At * ContractionRatio;                         % area of combustion chamber
+Dcc = sqrt((4*Acc)/pi);                              % diameter of combustion chamber
+
+% calc Cstar and Coeff of Thrust Cf
+Cstar = CstarfromAt(Pchamber,At,mdot);
+Cf = Cvac./Cstar;
+
+% calculate volume of combustion chamber and L1,Lstar based on stay time
+VolCc = VolCcfromTs(mdot,RhoChamber,TstayMin);
+Lstar = LstarfromVol(VolCc,At);
+Lchamber = (VolCc./At - (sqrt(At/pi)*cotd(ContractionAngle)*(ContractionRatio^(1/3)-1)/3))/ContractionRatio;
+
+% find nozzle characteristics
+V2max = sqrt(2*k_mixture*R*Tchamber/(k_mixture-1)); % at infinite expansion ratio
+Rt = Dt/2              ;                         % radius of throat
+Ae = At * ExpansionRatio      ;                  % exit area
+Re = sqrt(Ae/pi) ;                               % exit radius
+Ln = (Re - Rt)./tand(HalfConeAngle)   ;          % length of nozzle
+NozzleCorrection = 0.5*(1 + cosd(HalfConeAngle));    % correction for nozzle losses
+CvacCorrected = Cvac*NozzleCorrection;
+                       
+% Injector calculations
+dPinj = dPinjFrac * Pchamber; % 20% pressure drop across injectors
+MdotMmh = mdot /(1 + OFratio);
+AinjMmh = Ainj(MdotMmh,Cd,rhoMmh,dPinj)*10000  ;   % total area of MMH injectors cm^2
+VinjMmh = Vinj(Cd,rhoMmh,dPinj);
+DinjMmh = 2*sqrt(AinjMmh/(pi*numInjMmh))
+
+MdotNto = mdot - MdotMmh;
+AinjNto = Ainj(MdotNto,Cd,rhoNto,dPinj)*10000 ; ;   % total area of NTO injectors cm^2
+VinjNto = Vinj(Cd,rhoNto,dPinj);
+DinjNto = 2*sqrt(AinjNto/(pi*numInjNto));
+
+
+Limpingement = Lchamber*0.10*100;               % injector impingement distance cm (10% chamber length)
+angleratio = (rhoNto*AinjNto.*MdotMmh)./(rhoMmh*AinjMmh.*MdotNto) * (1/1.9*numInjNto/numInjMmh)^2;
+
+angleMmh = acosd(Limpingement./(10*DinjMmh));
+angleNto = asind(angleratio(1)*sind(angleMmh)) ;
+ImpAngle = angleNto + angleMmh;
+
+% distance between injectors
+Xinj = Limpingement.*(tand(angleMmh) + tand(angleNto));
+
+% Plotting At vs Chamber Pressure
+figure;
+yyaxis left; % Set the left y-axis for At
+plot(PchamberAtm, At);
+xlabel('Chamber Pressure [atm]');
+ylabel('A_{throat} [m]');
+title('Throat Area and Characteric Length for NTO/MMH vs. Chamber Pressure');
+grid on;
+
+hold on;
+
+yyaxis right; % Set the right y-axis L*
+plot(PchamberAtm, Lstar, '--');
+ylabel('L^* [m]');
+
+legend('A_{throat}', 'L^*','Location','east'); % Adding legend
+
+% Plotting Chamber Volume vs Chamber Pressure
+figure;
+yyaxis left; % Set the left y-axis for chamber volume
+plot(PchamberAtm, Cstar);
+xlabel('Chamber Pressure [atm]');
+ylabel('C^* [m]');
+title('C^* and Thrust Coefficient of Chamber for NTO/MMH vs. Chamber Pressure');
+grid on;
+
+hold on;
+
+yyaxis right; % Set the right y-axis for thrust coefficient
+plot(PchamberAtm, Cf, '--');
+ylabel('Coefficient of Thrust - C_F');
+
+legend('C^*', 'C_F','Location','east'); % Adding legend
+
+
+%Chamber Dimensions based on 80 atm chamber pressure
+fprintf('O/F mixture ratio = %.2f \n',OFratio);
+fprintf('Characteristic Velocity = %.2f km/s\n', Cstar(Index_P));
+fprintf('Ideal thrust coefficient C_f_ideal = %.2f \n', Cf(Index_P));
+fprintf('Thrust coefficient C_f = %.2f \n', Cf(Index_P)*EfficiencyFactor);
+
+fprintf('Specific Impulse (vacuum) = %.2f s\n', Isp);
+fprintf('Propellant mass flow rate = %.2f kg/s\n', mdot(Index_P));
+fprintf('Total Thrust = %.2f N\n', Ftotal);
+fprintf('Chamber Pressure = %.2f atm\n', PchamberAtm(Index_P));
+fprintf('Average gas specific heat ratio = %.3f\n', k_mixture);
+fprintf('Combustion chamber cross-section area = %.5f m^2\n', Acc(Index_P));
+fprintf('Combustion chamber diameter = %.5f m\n', Dcc(Index_P));
+fprintf('Throat area = %.5f m^2\n', At(Index_P));
+fprintf('Nozzle Exit Area = %.5f\n', Ae(Index_P));
+fprintf('Combustion Chamber Volume = %.5f m^3\n', VolCc(Index_P));
+fprintf('Combustion Chamber Length = %.5f m\n', Lchamber(Index_P));
+fprintf('Characteristic chamber length L* = %.5f m\n', Lstar(Index_P));
+fprintf('Design contraction area ratio = %.1f\n', ContractionRatio);
+fprintf('Design expansion area ratio = %.1f\n', ExpansionRatio);
+fprintf('Nozzle exit diameter = %.5f m\n', 2*Re(Index_P));
+fprintf('Nozzle length = %.5f m\n', Ln(Index_P));
+fprintf('Corrected effective exhaust velocity (Vacuum) = %.2f m/s\n', CvacCorrected(Index_P));
+fprintf('Circumference of Injector = %.3f cm\n',Dcc(Index_P)*pi*100);
+fprintf('Injector diameter for MMH = %.3f cm\n',DinjMmh(Index_P));
+fprintf('Injector diameter for NTO = %.3f cm\n',DinjNto(Index_P));

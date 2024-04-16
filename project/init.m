@@ -56,8 +56,9 @@ apoEuropa = 676938;     % km
 radEuropa = 670900;       % km
 
 % sphere of influence 
-SOIjupiter = 48.2e6;
-
+SOIjupiter = 4.82e7;
+SOIEarth = 9.25e5;
+SOIMars = 5.78e5;
 SaturnJ2 = 0.01645;
 
 %% radius 
@@ -71,40 +72,40 @@ Ra = @(a,e) a * (1 + e);
 PfromAe = @(a,e) a*(1-e^2);
 
 % radius
-Rradial = @(mu,e,h,ta) (h^2/mu)*(1+e*cosd(ta));
-RfromP = @(p,e,ta) p/(1+e*cosd(ta));
-RfromEA = @(a,e,ea) a*(1-e*cos(ea));
+Rradial = @(mu,e,h,ta) (h^2/mu)*(1+e*cosd(ta)); % from ang momentum, true anomaly, ecc
+RfromP = @(p,e,ta) p/(1+e*cosd(ta));        % from semi-latus rectum
+RfromEA = @(a,e,ea) a*(1-e*cos(ea));        % from eccentric anomaly
 
 % r vector - |r| (cos(raan) + sin(raan))
 RfromAngle = @(r, angle) r*[cosd(angle); sind(angle); 0];
 RfromConic = @(mu,h,e,ta) h^2/(1+e*cosd(ta))/mu;
-RfromVEs = @(mu,v,E) mu/((v^2/2)-E);
+RfromVEs = @(mu,v,E) mu/((v^2/2)-E);        % from velocity and specific energyy
 
 %% velocity
-VfromEs = @(mu,Es,r) sqrt(2*(Es+mu/r));
-Vradial = @(mu,e,h,ta) (mu/h) * e*sind(ta);
-Vtrans = @(mu,e,h,ta) (mu/h)*(1+e*cosd(ta)); 
-VfromRA = @(mu,r,a) sqrt((2*mu/r)-(mu/a));
-Vescape = @(mu,r) sqrt(2*mu/r);
+VfromEs = @(mu,Es,r) sqrt(2*(Es+mu/r));     % from specific energy
+Vradial = @(mu,e,h,ta) (mu/h) * e*sind(ta); % radial velocity
+Vtrans = @(mu,e,h,ta) (mu/h)*(1+e*cosd(ta)); % transverse velocity
+VfromRA = @(mu,r,a) sqrt((2*mu/r)-(mu/a));  % from radius and sma
+Vescape = @(mu,r) sqrt(2*mu/r);             % escape velocity
 
 %% orbital elements
 
 % semi major axis
-AfromVR = @(mu,v,r) -mu/(v^2 -(2*mu/r));
-AfromE = @(mu,E) -mu/(2*E);
+AfromVR = @(mu,v,r) -mu/(v^2 -(2*mu/r));    % from velocity, radius
+AfromE = @(mu,E) -mu/(2*E);                 % from specific energy
 AfromPeriod = @(mu,period) nthroot((period/(2*pi))^2 * mu,3);
-AfromRp = @(periapsis,e) periapsis/(1-e);
+AfromRp = @(periapsis,e) periapsis/(1-e);   % from radius of periapsis
 
 % semi minor axis
-BfromAE = @(a,e) a * sqrt(1-e^2);
+BfromAE = @(a,e) a * sqrt(1-e^2);   
 
 % eccentricity
-EccfromHE = @(mu,h,E) sqrt(1+(2*h^2*E/mu^2));
-EccfromHRV = @(mu,r,v,H) cross(v,H)/mu - r/norm(r);
-EccfromArp = @(a,rp) 1-rp/a;
-EccfromAra = @(a,ra) ra/a-1;
+EccfromHE = @(mu,h,E) sqrt(1+(2*h^2*E/mu^2));       % from specific energy and ang mom
+EccfromHRV = @(mu,r,v,H) cross(v,H)/mu - r/norm(r); % from ang mom, velocity
+EccfromArp = @(a,rp) 1-rp/a;                        % from rad of periapsis
+EccfromAra = @(a,ra) ra/a-1;                        % from rad of apoapsis
 EccfromRpRa = @(rp,ra) (ra-rp)/(ra+rp);
-EccfromAP = @(a,p) sqrt(1-p/a);
+EccfromAP = @(a,p) sqrt(1-p/a);                     % from semi-latus rectum
 
 % specific angular momentum
 HfromRV = @(r,v) cross(r,v);
@@ -179,6 +180,9 @@ synodFromMua = @(mu,a1,a2) 2*pi / (sqrt(mu/a1^3) - sqrt(mu/a2^3));
 TAfromPRE = @(p,r,e) acosd((1/e*((p/r)-1)));
 vout = @(vinf,vplanet,angle) sqrt(vinf^2 + vplanet^2 - (2*vinf*vplanet*cosd(angle)));
 deltavequiv = @(vinf, turningangle) 2*vinf*sind(turningangle/2);
+
+EccfromParkOrbitVinf = @(mu,rpark,vinf) 1 + rpark * vinf^2 / mu;
+burnAngle = @(ecc) acos(-1/ecc);
 
 % parabolic transfer orbit
 TOFp_plus = @(mu,s,c) 1/3 * sqrt(2/Gsun) * (s^(3/2)-(s-c)^(3/2));

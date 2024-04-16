@@ -1,7 +1,6 @@
 function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
     init;
     lesserTOF = true;
-    
     alpha = @(a,s) 2*asin(sqrt(s/(2*a)));
     beta = @(a,s,c) 2*asin(sqrt((s-c)/(2*a)));
     
@@ -15,7 +14,6 @@ function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
 
     c = sqrt(r1^2+r2^2-(2*r1*r2*cosd(t_angle)));
     s = 0.5 * (r1+r2+c);
-  
 
     % check parabolic TOF
     if path == "short" 
@@ -68,10 +66,10 @@ function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
     end
     % Now find eccentricity from p
     try
-        p = (4*anew * (s-r1)*(s-r2))/c^2 *(sin((alpha+beta)/2))^2;
+        p = (4*anew * (s-r1)*(s-r2))/c^2 *(sin((alpha(anew,s)+beta(anew,s,c))/2))^2;
         e = EccfromAP(anew,p);
-    catch
-        p = a0;
+    catch exception
+         p = anew;
     end
     % and true anomalies
 
