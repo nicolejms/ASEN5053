@@ -14,9 +14,8 @@ ExpansionRatio = 30;
 HalfConeAngle = 15;
 Cd = 0.80;               % Cd for injectors table 8-2
 dPinjFrac = 0.20;           % pressure drop across injectors
-numInjMmh = 100;
-numInjNto = 50;
-EfficiencyFactor = 0.98  ;
+numInjMmh = 150;
+numInjNto = 100;
 
 % constants
 Rc = 8.3144;            % gas contant J/ Kmol
@@ -100,9 +99,8 @@ V2max = sqrt(2*k_mixture*R*Tchamber/(k_mixture-1)); % at infinite expansion rati
 Rt = Dt/2              ;                         % radius of throat
 Ae = At * ExpansionRatio      ;                  % exit area
 Re = sqrt(Ae/pi) ;                               % exit radius
-Ln = (Re - Rt)./tand(HalfConeAngle)   ;          % length of nozzle
+y ;          % length of nozzle
 NozzleCorrection = 0.5*(1 + cosd(HalfConeAngle));    % correction for nozzle losses
-CvacCorrected = Cvac*NozzleCorrection;
                        
 % Injector calculations
 dPinj = dPinjFrac * Pchamber; % 20% pressure drop across injectors
@@ -117,7 +115,7 @@ VinjNto = Vinj(Cd,rhoNto,dPinj);
 DinjNto = 2*sqrt(AinjNto/(pi*numInjNto));
 
 
-Limpingement = Lchamber*0.10*100;               % injector impingement distance cm (10% chamber length)
+Limpingement = Lchamber*0.1*100;               % injector impingement distance cm (10% chamber length)
 angleratio = (rhoNto*AinjNto.*MdotMmh)./(rhoMmh*AinjMmh.*MdotNto) * (1/1.9*numInjNto/numInjMmh)^2;
 
 angleMmh = acosd(Limpingement./(10*DinjMmh));
@@ -166,7 +164,7 @@ legend('C^*', 'C_F','Location','east'); % Adding legend
 fprintf('O/F mixture ratio = %.2f \n',OFratio);
 fprintf('Characteristic Velocity = %.2f km/s\n', Cstar(Index_P));
 fprintf('Ideal thrust coefficient C_f_ideal = %.2f \n', Cf(Index_P));
-fprintf('Thrust coefficient C_f = %.2f \n', Cf(Index_P)*EfficiencyFactor);
+fprintf('Thrust coefficient C_f = %.2f \n', Cf(Index_P));
 
 fprintf('Specific Impulse (vacuum) = %.2f s\n', Isp);
 fprintf('Propellant mass flow rate = %.2f kg/s\n', mdot(Index_P));
@@ -184,7 +182,6 @@ fprintf('Design contraction area ratio = %.1f\n', ContractionRatio);
 fprintf('Design expansion area ratio = %.1f\n', ExpansionRatio);
 fprintf('Nozzle exit diameter = %.5f m\n', 2*Re(Index_P));
 fprintf('Nozzle length = %.5f m\n', Ln(Index_P));
-fprintf('Corrected effective exhaust velocity (Vacuum) = %.2f m/s\n', CvacCorrected(Index_P));
 fprintf('Circumference of Injector = %.3f cm\n',Dcc(Index_P)*pi*100);
 fprintf('Injector diameter for MMH = %.3f cm\n',DinjMmh(Index_P));
 fprintf('Injector diameter for NTO = %.3f cm\n',DinjNto(Index_P));
