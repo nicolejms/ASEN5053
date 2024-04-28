@@ -35,8 +35,8 @@ function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
             lesserTOF = false;
         end
         
-        deltaa = 100;
-        options = optimoptions('fsolve','Display','off', 'FunctionTolerance',1e-7,'MaxIterations',100);
+        deltaa = 10;
+        options = optimoptions('fsolve','Display','off', 'FunctionTolerance',1e-7,'MaxIterations',1000);
         a0 = a_min + deltaa;
         % error tolerance
         tol = 1e-6;
@@ -57,7 +57,7 @@ function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
                     deltav1 = NaN; deltav2 = NaN;
                     return;
                 end
-                a0 = anew + 10;
+                a0 = anew - 10;
                 i = i+1;
             else
                 disp("found a < a_min so not valid choice")

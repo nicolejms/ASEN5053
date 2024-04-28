@@ -32,6 +32,7 @@ rJupiterSC = RJupiter + hJupiter; % km, spacecraft flyby radius
 rEuropaSC = REuropa + hEuropa; % km, spacecraft orbital radius
 
 
+
 %% Calculations
 % Planetary circular orbit velocities
 vCircEarth = sqrt(muSun/aEarth);
@@ -47,10 +48,14 @@ aHohEarthToJupiter = (aEarth+aJupiter)/2;
 vHohEarth = sqrt(2*muSun/aEarth - muSun/aHohEarthToJupiter);
 vHohJupiterIn = sqrt(2*muSun/aJupiter - muSun/aHohEarthToJupiter);
 
+TOF = PeriodfromA(muSun,aHohEarthToJupiter)/2
+Pdays = TOF/Day
+
 % Jupiter-to-Europa Hohmann transfer
 aJupiterToEuropa = (rJupiterSC+aEuropa)/2;
 vHohJupiterOut = sqrt(2*muJupiter/rJupiterSC - muJupiter/aJupiterToEuropa);
 vHohEuropa = sqrt(2*muJupiter/aEuropa - muJupiter/aJupiterToEuropa);
+
 
 % Hyperbolic excess velocities
 vInfEarth = vHohEarth-vCircEarth;
