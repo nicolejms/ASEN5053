@@ -1,8 +1,8 @@
-function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
+function [deltav1,deltav2,p,e] = lambert2(mu,R1,R2,V1,V2,TOF,path)
     init;
     lesserTOF = true;
-    alpha = @(a,s) 2*asin(sqrt(s/(2*a)));
-    beta = @(a,s,c) 2*asin(sqrt((s-c)/(2*a)));
+    alpha1 = @(a,s) 2*asin(sqrt(s/(2*a)));
+    beta1 = @(a,s,c) 2*asin(sqrt((s-c)/(2*a)));
     
     r1 = norm(R1);
     r2 = norm(R2);
@@ -27,7 +27,7 @@ function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
         a_min = s/2;
         c_min = 4*a_min-r1-r2;
         alpha_min = pi;
-        beta_min = beta(a_min,s,c);
+        beta_min = beta1(a_min,s,c);
         n_min = sqrt(mu/a_min^3);
         TOF_min = 1/n_min*((alpha_min-beta_min)-(sin(alpha_min)-sin(beta_min)));
 
@@ -52,8 +52,8 @@ function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
                 TOFnew =  1/n*((alpha-beta)-(sin(alpha)-sin(beta)));
                 diff = abs(TOFnew-TOF) ;
             
-                if i==100
-                    disp("could not find value for Lambert")
+                if i==1000
+              %      disp("could not find value for Lambert")
                     deltav1 = NaN; deltav2 = NaN;
                     return;
                 end
@@ -66,7 +66,7 @@ function [deltav1,deltav2] = lambert2(mu,R1,R2,V1,V2,TOF,path)
     end
     % Now find eccentricity from p
     try
-        p = (4*anew * (s-r1)*(s-r2))/c^2 *(sin((alpha(anew,s)+beta(anew,s,c))/2))^2;
+        p = (4*anew * (s-r1)*(s-r2))/c^2 *(sin((alpha1(anew,s)+beta1(anew,s,c))/2))^2;
         e = EccfromAP(anew,p);
     catch exception
          p = anew;

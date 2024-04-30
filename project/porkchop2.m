@@ -5,13 +5,13 @@ init;
 mu = Gsun;
 path = "short";
 % generate date time arrays
-t1Earth = datetime(2005,6,20,0,0,0);
-t2Earth = datetime(2005,9,20,0,0,0);
-tEarth = t1Earth:caldays(1):t2Earth;
+t1Earth = datetime(2025,6,20,0,0,0);
+t2Earth = datetime(2028,9,20,0,0,0);
+tEarth = t1Earth:caldays(7):t2Earth;
 
-t1Jupiter = datetime(2005,12,1,0,0,0);
-t2Jupiter = datetime(2006,6,19,0,0,0);
-tJupiter = t1Jupiter:caldays(2):t2Jupiter;
+t1Jupiter = datetime(2027,12,1,0,0,0);
+t2Jupiter = datetime(2030,12,31,0,0,0);
+tJupiter = t1Jupiter:caldays(7):t2Jupiter;
 
 % R1 = [HW6EphemEarth.X, HW6EphemEarth.Y, HW6EphemEarth.Z];
 % V1 = [HW6EphemEarth.VX, HW6EphemEarth.VY, HW6EphemEarth.VZ];
@@ -23,7 +23,7 @@ dvE = []; dvM = []; TOFf = [];Epochs = [];R1 = [];R2 = [];V1 = []; V2 = [];
 k = 1;
 for i = 1:length(tEarth)
     [r1,v1] = planetEphemeris(juliandate(tEarth(i)),'Sun','Earth',430);
-    R1 = [R1;r1]
+    R1 = [R1;r1];
     V1 = [V1;v1];
     for j = 1:length(tJupiter)
         TOF = juliandate(tJupiter(j)) - juliandate(tEarth(i));
@@ -45,7 +45,7 @@ end
 X = R1.JDTDB(1:end) - R1.JDTDB(1);   
 Y = HW6EphemMars.JDTDB(1:end) - HW6EphemMars.JDTDB(1); 
 
-
+ 
 figure(1) 
 % peaks = VinfE(:); 
 % peaks = fix(peaks);
