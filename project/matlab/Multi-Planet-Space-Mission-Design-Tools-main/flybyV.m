@@ -28,7 +28,7 @@ R1 = position(planetID1,t1);
     
 R2 = position(planetID2,t2);
 coe2 = coe_from_position(planetID2,t2);
-[r2, vPlanet2] = sv_from_coe(coe2);
+[r2, vPlanet2] = sv_from_coe(coe2,mu);
 
 [V1, V2, extremal_distances, exitflag] = lambert(R1, R2, tf12, 0, mu);
 v1 = V1;
@@ -43,7 +43,7 @@ tf23 = abs(t3-t2)/(dayInSec); % time of flight from 2 to 3 [s]
 
 R3 = position(planetID3,t3);
 
-[V1, V2, extremal_distances, exitflag] = lambert(R2, R3, tf23, 0, mu);
+[V1, V2, extremal_distances, exitflag] = lambert(R2, R3, tf23, 1, mu);
 v3 = V1;
 v4 = V2;
 VinfOUT = v3-vPlanet2; % depatrure velocity minus planet velocity

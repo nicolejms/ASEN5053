@@ -20,7 +20,7 @@ REuropa = 1561; % km
 
 % Orbital semi-major axes
 aEarth = 1 * au; % km, around Sun
-aJupiter = 9.537 * au; % km, around Sun
+aJupiter = 3.2 * au; % km, around Sun
 aEuropa = 671000; % km, around Jupiter
 
 % Spacecraft trajectory parameters
@@ -56,7 +56,6 @@ aJupiterToEuropa = (rJupiterSC+aEuropa)/2;
 vHohJupiterOut = sqrt(2*muJupiter/rJupiterSC - muJupiter/aJupiterToEuropa);
 vHohEuropa = sqrt(2*muJupiter/aEuropa - muJupiter/aJupiterToEuropa);
 
-
 % Hyperbolic excess velocities
 vInfEarth = vHohEarth-vCircEarth;
 vInfJupiter = vCircJupiter-vHohJupiterIn;
@@ -70,7 +69,6 @@ aHypEuropa = -muEuropa/vInfEuropa^2;
 % Hyperbolic eccentricities
 eHypEarth = ecchfromArp(aHypEarth,rEarthSC)
 eHypJupiter = EccfromArp(aHypJupiter,rJupiterSC)
-
 
 % Hyperbolic periapsis velocities
 vHypPeriEarth = sqrt(2*muEarth/rEarthSC - muEarth/aHypEarth);
@@ -86,6 +84,15 @@ dvEuropa = abs(vCircEuropaSC-vHypPeriEuropa);
 dvTotal = dvEarth+dvJupiter+dvEuropa;
 disp(dvTotal);
 
+% determine phase angles
+    mmorigin = MMfromMua(muSun,aEarth);
+    mmsc = MMfromMua(muSun,(aEarth+aJupiter)/2);      % mean motion of transfer 
+    mmdestination = MMfromMua(muSun,aJupiter); % mean motion of destination
+    
+    phasei = pi -( mmdestination * TOF);  % phase angle for intercept 
+    phasedegi = rad2deg(phasei);
+    phasef = pi -( mmorigin * TOF);  % phase angle for intercept 
+    phasedegf = rad2deg(phasef);
 
 
 %% bielliptic transfer 
@@ -134,5 +141,4 @@ dvBiEuropa = abs(vCircEuropaSC-vHypBiPeriEuropa);
 % Total Delta-v
 dvBiTotal = dvBiEarth+vInfBiIntermed+dvBiJupiter+dvBiEuropa;
 disp(dvBiTotal);
-
 

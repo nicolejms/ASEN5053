@@ -10,9 +10,9 @@ tf = (t2-t1)/(60*60*24);
 
 [V1, V2, extremal_distances, exitflag] = lambert(R1, R2, tf, 0, mu);
 
-coe1 = coe_from_sv(R1,V1); % [h e RA incl w TA a]
+coe1 = coe_from_sv(R1,V1,mu); % [h e RA incl w TA a]
 
-coe2 = coe_from_sv(R2,V2); % [h e RA incl w TA a]
+coe2 = coe_from_sv(R2,V2,mu); % [h e RA incl w TA a]
 
 a = coe1(7); % [km]
 e = coe1(2);

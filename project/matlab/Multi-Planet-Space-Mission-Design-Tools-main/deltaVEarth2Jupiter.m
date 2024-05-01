@@ -36,13 +36,13 @@ for t1 = t1min:((abs(t1max-t1min))/(steps-1)):t1max
     
     R1 = position(planetID1,t1); % calculates position vector
     coe = coe_from_position(planetID1,t1); % calculates coefficients of orbital elements
-    [r1, vPlanet1] = sv_from_coe(coe); % attains state vector
+    [r1, vPlanet1] = sv_from_coe(coe,mu); % attains state vector
     
     for t2 = t2min:((abs(t2max-t2min))/(steps-1)):t2max
         
         R2 = position(planetID2,t2); % calculates position vector
         coe = coe_from_position(planetID2,t2); % calculates coefficients of orbital elements
-        [r2, vPlanet2] = sv_from_coe(coe); % attains state vector
+        [r2, vPlanet2] = sv_from_coe(coe,mu); % attains state vector
         
         tf = abs(t2-t1)/(dayInSec);
         [V1, V2, extremal_distances, exitflag] = lambert(R1, R2, tf, 0, mu);

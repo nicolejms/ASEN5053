@@ -25,6 +25,7 @@ init
     TOFday = TOF/Day;
     TOFyear = TOF/Year;
     
+    mmorigin = MMfromMua(mu,rpt);
     mmsc = MMfromMua(mu,a_t);      % mean motion of transfer 
     mmdestination = MMfromMua(mu,rat); % mean motion of destination
     synod1 = synodFromMm(mmsc,mmdestination);        % synodic period
@@ -32,8 +33,12 @@ init
         
     synodyear = synod1/Year;
     
-    phase = pi -( mmdestination * TOF);  % phase angle for intercept 
-    phasedeg = rad2deg(phase);
+    phasei = pi -( mmdestination * TOF);  % phase angle for intercept 
+    phasedegi = rad2deg(phasei);
+    phasef = pi -( mmorigin * TOF);  % phase angle for intercept 
+    phasedegf = rad2deg(phasef);
+   
+    
 end
 
     
