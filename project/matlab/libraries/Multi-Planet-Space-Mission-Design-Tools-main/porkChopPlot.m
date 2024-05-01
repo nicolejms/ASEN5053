@@ -1,6 +1,6 @@
 clear all 
 close all
-
+init
 % 'Pork Chop' plotter
 
 % constants
@@ -10,15 +10,15 @@ dayInSec = 24*60*60;
 % INPUTS
 
 planetID1 = 3;
-planetID2 = 4;
+planetID2 = 5;
 
-t1min = (J0(2020, 4, 1) - J0(2000,1,1))*dayInSec;
-t1max = (J0(2020, 12, 7) - J0(2000,1,1))*dayInSec;
-t2min = (J0(2020, 8, 5) - J0(2000,1,1))*dayInSec;
-t2max = (J0(2022, 2, 5) - J0(2000,1,1))*dayInSec;
+t1min = (J0(2024, 7, 1) - J0(2000,1,1))*dayInSec;
+t1max = (J0(2025, 7, 7) - J0(2000,1,1))*dayInSec;
+t2min = (J0(2027, 1, 1) - J0(2000,1,1))*dayInSec;
+t2max = (J0(2027, 8, 1) - J0(2000,1,1))*dayInSec;
 
 steps = 1000 ; % increasing increases computation time exponentially
-deltaVlimit = 16; %[km/s] % 16 used in that paper
+deltaVlimit = 20; %[km/s] 
 
 %maxtf = 250*dayInSec; % [s]
 
@@ -32,19 +32,17 @@ z = zeros(1,steps);
 
 counter = 1;
 
-
-
 for t1 = t1min:((abs(t1max-t1min))/(steps-1)):t1max
     
     R1 = position(planetID1,t1);
     coe = coe_from_position(planetID1,t1);
-    [r1, vPlanet1] = sv_from_coe(coe);
+    [r1, vPlanet1] = sv_from_coe(coe,Gsun);
     
     for t2 = t2min:((abs(t2max-t2min))/(steps-1)):t2max
         
         R2 = position(planetID2,t2);
         coe = coe_from_position(planetID2,t2);
-        [r2, vPlanet2] = sv_from_coe(coe);
+        [r2, vPlanet2] = sv_from_coe(coe,Gsun);
         
         tf = abs(t2-t1)/(dayInSec);
         [V1, V2, extremal_distances, exitflag] = lambert(R1, R2, tf, 0, mu);
@@ -122,12 +120,12 @@ shading interp
 
 % sets axes to dates
 xticks(t1min:25*dayInSec:t1max);
-datesX = {datestr(737882+(0*25),'dd-mmm-yy'),datestr(737882+(1*25),'dd-mmm-yy'),datestr(737882+(2*25),'dd-mmm-yy'),datestr(737882+(3*25),'dd-mmm-yy'),datestr(737882+(4*25),'dd-mmm-yy'),datestr(737882+(5*25),'dd-mmm-yy'),datestr(737882+(6*25),'dd-mmm-yy'),datestr(737882+(7*25),'dd-mmm-yy'),datestr(737882+(8*25),'dd-mmm-yy'),datestr(737882+(9*25),'dd-mmm-yy'),datestr(737882+(10*25),'dd-mmm-yy')};
+datesX = {datestr(739343+(0*25),'dd-mmm-yy'),datestr(739343+(1*25),'dd-mmm-yy'),datestr(739343+(2*25),'dd-mmm-yy'),datestr(739343+(3*25),'dd-mmm-yy'),datestr(739343+(4*25),'dd-mmm-yy'),datestr(739343+(5*25),'dd-mmm-yy'),datestr(739343+(6*25),'dd-mmm-yy'),datestr(739343+(7*25),'dd-mmm-yy'),datestr(739343+(8*25),'dd-mmm-yy'),datestr(739343+(9*25),'dd-mmm-yy'),datestr(739343+(10*25),'dd-mmm-yy')};
 xticklabels(datesX)
 xtickangle(45)
 
 yticks(t2min:50*dayInSec:t2max);
-datesY = {'',datestr(738008+(1*50),'dd-mmm-yy'),datestr(738008+(2*50),'dd-mmm-yy'),datestr(738008+(3*50),'dd-mmm-yy'),datestr(738008+(4*50),'dd-mmm-yy'),datestr(738008+(5*50),'dd-mmm-yy'),datestr(738008+(6*50),'dd-mmm-yy'),datestr(738008+(7*50),'dd-mmm-yy'),datestr(7380082+(8*50),'dd-mmm-yy'),datestr(738008+(9*50),'dd-mmm-yy'),datestr(738008+(10*50),'dd-mmm-yy'),datestr(738008+(11*50),'dd-mmm-yy')};
+datesY = {'',datestr(740073+(1*50),'dd-mmm-yy'),datestr(740073+(2*50),'dd-mmm-yy'),datestr(740073+(3*50),'dd-mmm-yy'),datestr(740073+(4*50),'dd-mmm-yy'),datestr(740073+(5*50),'dd-mmm-yy'),datestr(740073+(6*50),'dd-mmm-yy'),datestr(740073+(7*50),'dd-mmm-yy'),datestr(740073+(8*50),'dd-mmm-yy'),datestr(740073+(9*50),'dd-mmm-yy'),datestr(740073+(10*50),'dd-mmm-yy'),datestr(740073+(11*50),'dd-mmm-yy')};
 yticklabels(datesY)
 ytickangle(0)
 
@@ -159,80 +157,85 @@ plot(x1,[arrivet arrivet],'color','r');
 % stem3(x,y,z)
 %%%%%%%%%%%%%%%%%%%
 
-
-% calculates difference between NASA prediction and the software's
-departureDays = launcht/dayInSec;
-NASAdeparture = (J0(2020, 7, 24.6) - J0(2000,1,1));
-differenceInDeparture = departureDays-NASAdeparture
-arrivetDays = arrivet/dayInSec;
-NASAarrive = (J0(2021, 2, 18) - J0(2000,1,1));
-differenceInArrival = arrivetDays-NASAarrive
-
-% plots NASA launch window
-tNASAdepartureMin = (J0(2020, 7, 18) - J0(2000,1,1))*dayInSec;
-tNASAdepartureMax = (J0(2020, 8, 5) - J0(2000,1,1))*dayInSec;
-% plot([tNASAdepartureMin tNASAdepartureMax],[NASAarrive*dayInSec NASAarrive*dayInSec],'color','m');
-% hold off
-
-%variation in deltaV for NASA window
-figure(2)
-R2 = position(planetID2,NASAarrive*dayInSec);
-coe = coe_from_position(planetID2,NASAarrive*dayInSec);
-[r2, vPlanet2] = sv_from_coe(coe);
-
-hold on
-deltaVs = [];
-idc = 1;
-for tlaunch = tNASAdepartureMin-(24*60*60) : 12*60*60 : tNASAdepartureMax-(24*60*60)
-    
-    R1 = position(planetID1,tlaunch);
-    coe = coe_from_position(planetID1,tlaunch);
-    [r1, vPlanet1] = sv_from_coe(coe);
-    tf = abs(tlaunch-(NASAarrive*dayInSec))/(dayInSec);
-    [V1, V2, extremal_distances, exitflag] = lambert(R1, R2, tf, 0, mu);
-    deltaV = (abs(norm(vPlanet1-V1)))+(abs(norm(vPlanet2-V2))); % [km/s]
-    plot(tlaunch, deltaV,'.','color','b')
-    deltaVs(idc) = deltaV;
-    idc =idc+1;
-    % attempt at plotting my departure date
-%     y1=get(gca,'ylim');
-%     plot([launcht launcht],[6:7],'color','r');
-    
-end
-
-[value,position] = min(deltaVs);
-mindVNASALaunchWindow = value;
-
-% sets axes to dates
-xticks(tNASAdepartureMin-(24*60*60):24*60*60:tNASAdepartureMax-(24*60*60));
-datesX = {datestr(737990+(0*1),'dd-mmm-yy'),datestr(737990+(1*1),'dd-mmm-yy'),datestr(737990+(2*1),'dd-mmm-yy'),datestr(737990+(3*1),'dd-mmm-yy'),datestr(737990+(4*1),'dd-mmm-yy'),datestr(737990+(5*1),'dd-mmm-yy'),datestr(737990+(6*1),'dd-mmm-yy'),datestr(737990+(7*1),'dd-mmm-yy'),datestr(737990+(8*1),'dd-mmm-yy'),datestr(737990+(9*1),'dd-mmm-yy'),datestr(737990+(10*1),'dd-mmm-yy'),datestr(737990+(11*1),'dd-mmm-yy'),datestr(737990+(12*1),'dd-mmm-yy'),datestr(737990+(13*1),'dd-mmm-yy'),datestr(737990+(14*1),'dd-mmm-yy'),datestr(737990+(15*1),'dd-mmm-yy'),datestr(737990+(16*1),'dd-mmm-yy'),datestr(737990+(17*1),'dd-mmm-yy'),datestr(737990+(18*1),'dd-mmm-yy')};
-xticklabels(datesX)
-xtickangle(45)
-%title({'Variation in \DeltaV over NASAs proposed launch','window assuming an arrival date of 18-02-21'})
-xlabel('Departure Date')
-ylabel('\DeltaV  [km/s]')
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% variation in deltaV for NASA window but my arrival date
-
-% R2 = position(planetID2,arrivet);
-% coe = coe_from_position(planetID2,arrivet);
+% 
+% % calculates difference between NASA prediction and the software's
+% departureDays = launcht/dayInSec;
+% NASAdeparture = (J0(2020, 7, 24.6) - J0(2000,1,1));
+% differenceInDeparture = departureDays-NASAdeparture
+% arrivetDays = arrivet/dayInSec;
+% NASAarrive = (J0(2021, 2, 18) - J0(2000,1,1));
+% differenceInArrival = arrivetDays-NASAarrive
+% 
+% % plots NASA launch window
+% tNASAdepartureMin = (J0(2020, 7, 18) - J0(2000,1,1))*dayInSec;
+% tNASAdepartureMax = (J0(2020, 8, 5) - J0(2000,1,1))*dayInSec;
+% % plot([tNASAdepartureMin tNASAdepartureMax],[NASAarrive*dayInSec NASAarrive*dayInSec],'color','m');
+% % hold off
+% 
+% %variation in deltaV for NASA window
+% figure(2)
+% R2 = position(planetID2,NASAarrive*dayInSec);
+% coe = coe_from_position(planetID2,NASAarrive*dayInSec);
 % [r2, vPlanet2] = sv_from_coe(coe);
-
-
-% for tlaunch = tNASAdepartureMin-(24*60*60*4) : 60*60 : tNASAdepartureMax
-%     
+% 
+% hold on
+% deltaVs = [];
+% idc = 1;
+% for tlaunch = tNASAdepartureMin-(24*60*60) : 12*60*60 : tNASAdepartureMax-(24*60*60)
+% 
 %     R1 = position(planetID1,tlaunch);
 %     coe = coe_from_position(planetID1,tlaunch);
 %     [r1, vPlanet1] = sv_from_coe(coe);
 %     tf = abs(tlaunch-(NASAarrive*dayInSec))/(dayInSec);
 %     [V1, V2, extremal_distances, exitflag] = lambert(R1, R2, tf, 0, mu);
 %     deltaV = (abs(norm(vPlanet1-V1)))+(abs(norm(vPlanet2-V2))); % [km/s]
-%     plot(tlaunch, deltaV,'.','color','m')
-%     
+%     plot(tlaunch, deltaV,'.','color','b')
+%     deltaVs(idc) = deltaV;
+%     idc =idc+1;
+%     % attempt at plotting my departure date
+% %     y1=get(gca,'ylim');
+% %     plot([launcht launcht],[6:7],'color','r');
+% 
 % end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% [value,position] = min(deltaVs);
+% mindVNASALaunchWindow = value;
+% 
+% % sets axes to dates
+% xticks(tNASAdepartureMin-(24*60*60):24*60*60:tNASAdepartureMax-(24*60*60));
+% datesX = {datestr(737990+(0*1),'dd-mmm-yy'),datestr(737990+(1*1),'dd-mmm-yy'),datestr(737990+(2*1),'dd-mmm-yy'),datestr(737990+(3*1),'dd-mmm-yy'),datestr(737990+(4*1),'dd-mmm-yy'),datestr(737990+(5*1),'dd-mmm-yy'),datestr(737990+(6*1),'dd-mmm-yy'),datestr(737990+(7*1),'dd-mmm-yy'),datestr(737990+(8*1),'dd-mmm-yy'),datestr(737990+(9*1),'dd-mmm-yy'),datestr(737990+(10*1),'dd-mmm-yy'),datestr(737990+(11*1),'dd-mmm-yy'),datestr(737990+(12*1),'dd-mmm-yy'),datestr(737990+(13*1),'dd-mmm-yy'),datestr(737990+(14*1),'dd-mmm-yy'),datestr(737990+(15*1),'dd-mmm-yy'),datestr(737990+(16*1),'dd-mmm-yy'),datestr(737990+(17*1),'dd-mmm-yy'),datestr(737990+(18*1),'dd-mmm-yy')};
+% xticklabels(datesX)
+% xtickangle(45)
+% %title({'Variation in \DeltaV over NASAs proposed launch','window assuming an arrival date of 18-02-21'})
+% xlabel('Departure Date')
+% ylabel('\DeltaV  [km/s]')
+% 
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % variation in deltaV for NASA window but my arrival date
+% 
+% % R2 = position(planetID2,arrivet);
+% % coe = coe_from_position(planetID2,arrivet);
+% % [r2, vPlanet2] = sv_from_coe(coe);
+% 
+% 
+% % for tlaunch = tNASAdepartureMin-(24*60*60*4) : 60*60 : tNASAdepartureMax
+% %     
+% %     R1 = position(planetID1,tlaunch);
+% %     coe = coe_from_position(planetID1,tlaunch);
+% %     [r1, vPlanet1] = sv_from_coe(coe);
+% %     tf = abs(tlaunch-(NASAarrive*dayInSec))/(dayInSec);
+% %     [V1, V2, extremal_distances, exitflag] = lambert(R1, R2, tf, 0, mu);
+% %     deltaV = (abs(norm(vPlanet1-V1)))+(abs(norm(vPlanet2-V2))); % [km/s]
+% %     plot(tlaunch, deltaV,'.','color','m')
+% %     
+% % end
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 
+% hold off
+% 
 
-hold off
+julian = 2451545.5
+julian + 777527000/Day
 
+% 777527000
