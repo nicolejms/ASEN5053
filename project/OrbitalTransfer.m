@@ -9,7 +9,7 @@ G = 6.6743e-20; % N*km^3/kg^2
 % Masses
 muSun = 1.3271e11; % km^3/s^2
 muEarth = 3.986e5; % km^3/s^2
-muJupiter = 1.2671e8; % km^3/s^2
+muJupiter = Gsaturn; % km^3/s^2
 massEuropa = 480e20; % kg
 muEuropa = G*massEuropa; % km^3/s^2
 
@@ -20,7 +20,7 @@ REuropa = 1561; % km
 
 % Orbital semi-major axes
 aEarth = 1 * au; % km, around Sun
-aJupiter = 5.204 * au; % km, around Sun
+aJupiter = 9.537 * au; % km, around Sun
 aEuropa = 671000; % km, around Jupiter
 
 % Spacecraft trajectory parameters
@@ -30,6 +30,7 @@ hJupiter = 1e6; % km, Jupiter flyby altitude
 rEarthSC = REarth + hEarth; % km, spacecraft orbital radius
 rJupiterSC = RJupiter + hJupiter; % km, spacecraft flyby radius
 rEuropaSC = REuropa + hEuropa; % km, spacecraft orbital radius
+
 
 
 %% Calculations
@@ -47,10 +48,14 @@ aHohEarthToJupiter = (aEarth+aJupiter)/2;
 vHohEarth = sqrt(2*muSun/aEarth - muSun/aHohEarthToJupiter);
 vHohJupiterIn = sqrt(2*muSun/aJupiter - muSun/aHohEarthToJupiter);
 
+TOF = PeriodfromA(muSun,aHohEarthToJupiter)/2
+Pdays = TOF/Day
+
 % Jupiter-to-Europa Hohmann transfer
 aJupiterToEuropa = (rJupiterSC+aEuropa)/2;
 vHohJupiterOut = sqrt(2*muJupiter/rJupiterSC - muJupiter/aJupiterToEuropa);
 vHohEuropa = sqrt(2*muJupiter/aEuropa - muJupiter/aJupiterToEuropa);
+
 
 % Hyperbolic excess velocities
 vInfEarth = vHohEarth-vCircEarth;

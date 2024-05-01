@@ -192,7 +192,7 @@ TOFp_minus = @(mu,s,c) 1/3 * sqrt(2/Gsun) * (s^(3/2)+(s-c)^(3/2));
 F = @(r,p,theta) 1-(r/p) * (1-cosd(theta));
 G = @(mu,r,r0,p,theta) r*r0 * sind(theta) /sqrt(mu*p);
 Fdot = @(mu,r,r0,p,theta) sqrt(mu/p)*tand(theta/2)*((1-cosd(theta))/p - 1/r - 1/r0);
-Gdot = @(r,p,theta) 1-(r/p)*(1-cosd(theta));
+Gdot = @(r0,p,theta) 1-(r0/p)*(1-cosd(theta));
 
 fFromdeltaEA = @(sma,r0,EA) 1 - sma/r0 * (1-cos(EA));
 gFromdeltaEA = @(mu,sma,r0,EA,dt) dt - sqrt((sma^3/mu)) * (EA-sin(EA));

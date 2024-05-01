@@ -8,13 +8,17 @@ R= [0 0 0 0 0 0 0];Phase = {};
 k = 1;
 for i = 1:length(tEarth)
     [r1,~] = planetEphemeris(juliandate(tEarth(i)),'Sun','Earth',430);
-    [r2,~] = planetEphemeris(juliandate(tEarth(i)),'Sun','Jupiter',430);
+    [r2,~] = planetEphemeris(juliandate(tEarth(i)),'Sun','Jupiter',430);     
     R = [R; juliandate(tEarth(i)) r1 r2];
 
     % assume both are on same ecliptic plane... so just x,y coord
     phase = acosd(dot(r1(1:2),r2(1:2))/(norm(r1(1:2))*norm(r2(1:2))));
-    if phase > 97 && phase < 98
-        Phase = [Phase; string(tEarth(i))  phase]
+    negphase = acosd(dot(r2(1:2),r1(1:2))/(norm(r1(1:2))*norm(r2(1:2))));
+    if (phase > 97 && phase < 98) 
+        Phase = [Phase; string(tEarth(i))  phase];
+    end
+    if (negphase> 97 && negphase < 98)
+        Phase = [Phase; string(tEarth(i))  negphase];
     end
 end
 
