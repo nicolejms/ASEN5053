@@ -55,6 +55,7 @@ GMAT DefaultSC.EulerAngleSequence = '321';
 
 
 
+
 %----------------------------------------
 %---------- ForceModels
 %----------------------------------------
@@ -181,9 +182,9 @@ GMAT DefaultGroundTrackPlot.TextureMap = 'ModifiedBlueMarble.jpg';
 
 BeginMissionSequence;
 Target DefaultDC {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true};
-   Vary 'VaryDV1x' DefaultDC(DV1.Element1 = -7, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
-   Vary 'VaryDV1y' DefaultDC(DV1.Element2 = -4, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
-   Vary 'VaryDV1z' DefaultDC(DV1.Element3 = 3, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Vary 'VaryDV1x' DefaultDC(DV1.Element1 = -8.800000000000001, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Vary 'VaryDV1y' DefaultDC(DV1.Element2 = -0.5, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
+   Vary 'VaryDV1z' DefaultDC(DV1.Element3 = 2.95, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
    Vary 'VaryDV2x' DefaultDC(DV2.Element1 = 23, {Perturbation = 1e-7, Lower = -25, Upper = 25, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
    Vary 'VaryDV2y' DefaultDC(DV2.Element2 = 23, {Perturbation = 1e-7, Lower = -25, Upper = 25, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
    Vary 'VaryDV2z' DefaultDC(DV2.Element3 = 17, {Perturbation = 0.0000001, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});

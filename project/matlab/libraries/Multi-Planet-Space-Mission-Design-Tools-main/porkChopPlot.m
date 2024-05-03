@@ -12,16 +12,15 @@ dayInSec = 24*60*60;
 planetID1 = 3;
 planetID2 = 5;
 
-t1min = (J0(2024, 7, 1) - J0(2000,1,1))*dayInSec;
-t1max = (J0(2025, 7, 7) - J0(2000,1,1))*dayInSec;
-t2min = (J0(2027, 1, 1) - J0(2000,1,1))*dayInSec;
-t2max = (J0(2027, 8, 1) - J0(2000,1,1))*dayInSec;
+t1min = (J0(2028, 11, 14) - J0(2000,1,1))*dayInSec;
+t1max = (J0(2029, 6, 1) - J0(2000,1,1))*dayInSec;
+t2min = (J0(2031, 6, 1) - J0(2000,1,1))*dayInSec;
+t2max = (J0(2032, 6, 1) - J0(2000,1,1))*dayInSec;
 
 steps = 1000 ; % increasing increases computation time exponentially
-deltaVlimit = 20; %[km/s] 
+deltaVlimit = 50; %[km/s] 
 
 %maxtf = 250*dayInSec; % [s]
-
 
 % MAIN CODE
 
@@ -38,7 +37,7 @@ for t1 = t1min:((abs(t1max-t1min))/(steps-1)):t1max
     coe = coe_from_position(planetID1,t1);
     [r1, vPlanet1] = sv_from_coe(coe,Gsun);
     
-    for t2 = t2min:((abs(t2max-t2min))/(steps-1)):t2max
+    for t2 =  t2min:((abs(t2max-t2min))/(steps-1)):t2max
         
         R2 = position(planetID2,t2);
         coe = coe_from_position(planetID2,t2);
@@ -66,6 +65,8 @@ for t1 = t1min:((abs(t1max-t1min))/(steps-1)):t1max
     end
     
 end
+launch = t1min/dayInSec;
+arrival = t2min/dayInSec;
 
 % finds lowest value of z
 [M,I] = min(z);
@@ -87,58 +88,34 @@ yv = linspace(min(y), max(y), steps);
 [X,Y] = meshgrid(xv, yv);
 Z = griddata(x,y,z,X,Y);
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% comb out max tf
-% for i=1:steps^2
-%     for j=1:steps^2
-%         if (abs(y(j)-x(i)))>maxtf
-%             Z(i,j)=NaN;
-%         else
-%         end
-%     end
-% end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% contour plot
-% figure(3)
-% contour(X,Y,Z,20)
-% hold on
-% plot(x(I),y(I),'color','m','marker','*')
-% xlabel('Departure [s]')
-% ylabel('Arrival [s]')
-% zlabel('deltaV [km/s]')
-% hold off
-% colorbar;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % 2D colourmap plot
 figure(1)
-pcolor(X,Y,Z) % effectivly a 2D surf
-shading interp
+peaks = [14.6 15 15.5 16 18 20 30 40 50 60]
 
-% sets axes to dates
-xticks(t1min:25*dayInSec:t1max);
-datesX = {datestr(739343+(0*25),'dd-mmm-yy'),datestr(739343+(1*25),'dd-mmm-yy'),datestr(739343+(2*25),'dd-mmm-yy'),datestr(739343+(3*25),'dd-mmm-yy'),datestr(739343+(4*25),'dd-mmm-yy'),datestr(739343+(5*25),'dd-mmm-yy'),datestr(739343+(6*25),'dd-mmm-yy'),datestr(739343+(7*25),'dd-mmm-yy'),datestr(739343+(8*25),'dd-mmm-yy'),datestr(739343+(9*25),'dd-mmm-yy'),datestr(739343+(10*25),'dd-mmm-yy')};
+contour(X,Y,Z,peaks,ShowText="on")
+% pcolor(X,Y,Z) % effectivly a 2D surf
+% shading interp
+
+xticks(t1min:14*dayInSec:t1max);
+datesX = {datestr(launch+(0*14),'dd-mmm-yy'),datestr(launch+(1*14),'dd-mmm-yy'),datestr(launch+(2*14),'dd-mmm-yy'),datestr(launch+(3*14),'dd-mmm-yy'),datestr(launch+(4*14),'dd-mmm-yy'),datestr(launch+(5*14),'dd-mmm-yy'),datestr(launch+(6*14),'dd-mmm-yy'),datestr(launch+(14*14),'dd-mmm-yy'),datestr(launch+(8*14),'dd-mmm-yy'),datestr(launch+(9*14),'dd-mmm-yy'),datestr(launch+(10*14),'dd-mmm-yy'),datestr(launch+(11*14),'dd-mmm-yy'),datestr(launch+(12*14),'dd-mmm-yy'),datestr(launch+(13*14),'dd-mmm-yy'),datestr(launch+(14*14),'dd-mmm-yy'),datestr(launch+(15*14),'dd-mmm-yy'),datestr(launch+(16*14),'dd-mmm-yy')};
 xticklabels(datesX)
 xtickangle(45)
 
-yticks(t2min:50*dayInSec:t2max);
-datesY = {'',datestr(740073+(1*50),'dd-mmm-yy'),datestr(740073+(2*50),'dd-mmm-yy'),datestr(740073+(3*50),'dd-mmm-yy'),datestr(740073+(4*50),'dd-mmm-yy'),datestr(740073+(5*50),'dd-mmm-yy'),datestr(740073+(6*50),'dd-mmm-yy'),datestr(740073+(7*50),'dd-mmm-yy'),datestr(740073+(8*50),'dd-mmm-yy'),datestr(740073+(9*50),'dd-mmm-yy'),datestr(740073+(10*50),'dd-mmm-yy'),datestr(740073+(11*50),'dd-mmm-yy')};
+yticks(t2min:30*dayInSec:t2max);
+datesY = {datestr(arrival+(0*30),'dd-mmm-yy'), datestr(739983+(1*30),'dd-mmm-yy'),datestr(arrival+(2*30),'dd-mmm-yy'),datestr(arrival+(3*30),'dd-mmm-yy'),datestr(arrival+(4*30),'dd-mmm-yy'),datestr(arrival+(5*30),'dd-mmm-yy'),datestr(arrival+(6*30),'dd-mmm-yy'),datestr(arrival+(7*30),'dd-mmm-yy'),datestr(arrival+(8*30),'dd-mmm-yy'),datestr(arrival+(9*30),'dd-mmm-yy'),datestr(arrival+(10*30),'dd-mmm-yy'),datestr(arrival+(11*30),'dd-mmm-yy'), datestr(arrival+(12*30),'dd-mmm-yy'),datestr(arrival+(13*30),'dd-mmm-yy'),datestr(arrival+(14*30),'dd-mmm-yy'),datestr(arrival+(15*30),'dd-mmm-yy'),datestr(arrival+(16*30),'dd-mmm-yy'),datestr(arrival+(17*30),'dd-mmm-yy'),datestr(arrival+(18*30),'dd-mmm-yy'),datestr(arrival+(19*30),'dd-mmm-yy')};
 yticklabels(datesY)
 ytickangle(0)
+
+
+xlabel("Earth Departure Date")
+ylabel("Jupiter Arrival Date")
+title("Total \DeltaV of Transfer Between Earth and Jupiter")
+colormap turbo;
 
 % datestr(737855) is opposite of datenum('2020,3,5')
 % datenum('2000,0,0') = 730485
 
 hold on
-
-
-% labels axes
-xlabel('Departure Date')
-ylabel('Arrival Date')
-%title({'Variation in \DeltaV for Type-1 Earth-Mars Trajectories'})
 c = colorbar;
 c.Label.String = '\DeltaV  [km/s]';
 
@@ -148,7 +125,8 @@ x1=get(gca,'xlim');
 plot([launcht launcht],y1,'color','r');
 plot(x1,[arrivet arrivet],'color','r');
 
-
+% jan 1 2029
+% dec 10 2031
 %%%%%%%%%%%%%%%%%%
 % other plots
 % figure(4)
@@ -235,7 +213,7 @@ plot(x1,[arrivet arrivet],'color','r');
 % hold off
 % 
 
-julian = 2451545.5
-julian + 777527000/Day
-
+ julian = 2451545.5
+ launch = julian + launcht/Day
+ arrival = julian + arrivet/Day
 % 777527000

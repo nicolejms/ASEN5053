@@ -32,7 +32,6 @@ rJupiterSC = RJupiter + hJupiter; % km, spacecraft flyby radius
 rEuropaSC = REuropa + hEuropa; % km, spacecraft orbital radius
 
 
-
 %% Calculations
 % Planetary circular orbit velocities
 vCircEarth = sqrt(muSun/aEarth);

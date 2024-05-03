@@ -1,6 +1,6 @@
 % Returns position vector of space craft given the True Anomaly (TA) as an input
 
-function R = craftPosition(planetID1, planetID2, t1, t2, TA)
+function [R,V1,V2] = craftPosition(planetID1, planetID2, t1, t2, TA)
 
 mu = 1.32712440018e11; % gravitational constant of heliocentric space flight [km^3/s^2]
 
@@ -10,9 +10,9 @@ tf = (t2-t1)/(60*60*24);
 
 [V1, V2, extremal_distances, exitflag] = lambert(R1, R2, tf, 0, mu);
 
-coe1 = coe_from_sv(R1,V1); % [h e RA incl w TA a]
+coe1 = coe_from_sv(R1,V1,mu); % [h e RA incl w TA a]
 
-coe2 = coe_from_sv(R2,V2); % [h e RA incl w TA a]
+coe2 = coe_from_sv(R2,V2,mu); % [h e RA incl w TA a]
 
 a = coe1(7); % [km]
 e = coe1(2);
