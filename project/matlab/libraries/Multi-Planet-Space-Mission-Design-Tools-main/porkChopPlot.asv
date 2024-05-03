@@ -12,10 +12,10 @@ dayInSec = 24*60*60;
 planetID1 = 3;
 planetID2 = 5;
 
-t1min = (J0(2028, 10, 1) - J0(2000,1,1))*dayInSec;
-t1max = (J0(2029, 8, 1) - J0(2000,1,1))*dayInSec;
-t2min = (J0(2031, 1, 1) - J0(2000,1,1))*dayInSec;
-t2max = (J0(2032, 1, 1) - J0(2000,1,1))*dayInSec;
+t1min = (J0(2025, 9, 10) - J0(2000,1,1))*dayInSec;
+t1max = (J0(2025, 11, 10) - J0(2000,1,1))*dayInSec;
+t2min = (J0(2028, 3urrth, 1) - J0(2000,1,1))*dayInSec;
+t2max = (J0(2028, 11, 1) - J0(2000,1,1))*dayInSec;
 
 steps = 1000 ; % increasing increases computation time exponentially
 deltaVlimit = 50; %[km/s] 
@@ -65,6 +65,8 @@ for t1 = t1min:((abs(t1max-t1min))/(steps-1)):t1max
     end
     
 end
+launch = t1min/dayInSec;
+arrival = t2min/dayInSec;
 
 % finds lowest value of z
 [M,I] = min(z);
@@ -86,51 +88,23 @@ yv = linspace(min(y), max(y), steps);
 [X,Y] = meshgrid(xv, yv);
 Z = griddata(x,y,z,X,Y);
 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% comb out max tf
-% for i=1:steps^2
-%     for j=1:steps^2
-%         if (abs(y(j)-x(i)))>maxtf
-%             Z(i,j)=NaN;
-%         else
-%         end
-%     end
-% end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% contour plot
-% figure(3)
-% contour(X,Y,Z,20)
-% hold on
-% plot(x(I),y(I),'color','m','marker','*')
-% xlabel('Departure [s]')
-% ylabel('Arrival [s]')
-% zlabel('deltaV [km/s]')
-% hold off
-% colorbar;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 % 2D colourmap plot
 figure(1)
-peaks = [14.5 15 16 18 20 30 40 50 60]
+peaks = [14.6 15 15.5 16 18 20 30 40 50 60]
 
 contour(X,Y,Z,peaks,ShowText="on")
 % pcolor(X,Y,Z) % effectivly a 2D surf
 % shading interp
 
-xticks(t1min:120*dayInSec:t1max);
-datesX = {datestr(739434+(0*120),'dd-mmm-yy'),datestr(739434+(1*120),'dd-mmm-yy'),datestr(739434+(2*120),'dd-mmm-yy'),datestr(739434+(3*120),'dd-mmm-yy'),datestr(739434+(4*120),'dd-mmm-yy'),datestr(739434+(5*120),'dd-mmm-yy'),datestr(739434+(6*120),'dd-mmm-yy'),datestr(739434+(7*120),'dd-mmm-yy'),datestr(739434+(8*120),'dd-mmm-yy'),datestr(739434+(9*120),'dd-mmm-yy'),datestr(739434+(10*120),'dd-mmm-yy'),datestr(739434+(11*120),'dd-mmm-yy'),datestr(739434+(12*120),'dd-mmm-yy'),datestr(739434+(13*120),'dd-mmm-yy'),datestr(739434+(14*120),'dd-mmm-yy'),datestr(739434+(15*120),'dd-mmm-yy'),datestr(739434+(16*120),'dd-mmm-yy'),datestr(739434+(17*120),'dd-mmm-yy'),datestr(739434+(18*120),'dd-mmm-yy'),datestr(739434+(19*120),'dd-mmm-yy')};
-
+xticks(t1min:14*dayInSec:t1max);
+datesX = {datestr(launch+(0*14),'dd-mmm-yy'),datestr(launch+(1*14),'dd-mmm-yy'),datestr(launch+(2*14),'dd-mmm-yy'),datestr(launch+(3*14),'dd-mmm-yy'),datestr(launch+(4*14),'dd-mmm-yy'),datestr(launch+(5*14),'dd-mmm-yy'),datestr(launch+(6*14),'dd-mmm-yy'),datestr(launch+(14*14),'dd-mmm-yy'),datestr(launch+(8*14),'dd-mmm-yy'),datestr(launch+(9*14),'dd-mmm-yy'),datestr(launch+(10*14),'dd-mmm-yy'),datestr(launch+(11*14),'dd-mmm-yy'),datestr(launch+(12*14),'dd-mmm-yy'),datestr(launch+(13*14),'dd-mmm-yy'),datestr(launch+(14*14),'dd-mmm-yy'),datestr(launch+(15*14),'dd-mmm-yy'),datestr(launch+(16*14),'dd-mmm-yy')};
 xticklabels(datesX)
 xtickangle(45)
 
-yticks(t2min:180*dayInSec:t2max);
-datesY = {datestr(739983+(0*180),'dd-mmm-yy'), datestr(739983+(1*180),'dd-mmm-yy'),datestr(739983+(2*180),'dd-mmm-yy'),datestr(739983+(3*180),'dd-mmm-yy'),datestr(739983+(4*180),'dd-mmm-yy'),datestr(739983+(5*180),'dd-mmm-yy'),datestr(739983+(6*180),'dd-mmm-yy'),datestr(739983+(7*180),'dd-mmm-yy'),datestr(739983+(8*180),'dd-mmm-yy'),datestr(739983+(9*180),'dd-mmm-yy'),datestr(739983+(10*180),'dd-mmm-yy'),datestr(739983+(11*180),'dd-mmm-yy'), datestr(739983+(12*180),'dd-mmm-yy'),datestr(739983+(13*180),'dd-mmm-yy'),datestr(739983+(14*180),'dd-mmm-yy'),datestr(739983+(15*180),'dd-mmm-yy'),datestr(739983+(16*180),'dd-mmm-yy'),datestr(739983+(17*180),'dd-mmm-yy'),datestr(739983+(18*180),'dd-mmm-yy'),datestr(739983+(19*180),'dd-mmm-yy')};
+yticks(t2min:30*dayInSec:t2max);
+datesY = {datestr(arrival+(0*30),'dd-mmm-yy'), datestr(739983+(1*30),'dd-mmm-yy'),datestr(arrival+(2*30),'dd-mmm-yy'),datestr(arrival+(3*30),'dd-mmm-yy'),datestr(arrival+(4*30),'dd-mmm-yy'),datestr(arrival+(5*30),'dd-mmm-yy'),datestr(arrival+(6*30),'dd-mmm-yy'),datestr(arrival+(7*30),'dd-mmm-yy'),datestr(arrival+(8*30),'dd-mmm-yy'),datestr(arrival+(9*30),'dd-mmm-yy'),datestr(arrival+(10*30),'dd-mmm-yy'),datestr(arrival+(11*30),'dd-mmm-yy'), datestr(arrival+(12*30),'dd-mmm-yy'),datestr(arrival+(13*30),'dd-mmm-yy'),datestr(arrival+(14*30),'dd-mmm-yy'),datestr(arrival+(15*30),'dd-mmm-yy'),datestr(arrival+(16*30),'dd-mmm-yy'),datestr(arrival+(17*30),'dd-mmm-yy'),datestr(arrival+(18*30),'dd-mmm-yy'),datestr(arrival+(19*30),'dd-mmm-yy')};
 yticklabels(datesY)
 ytickangle(0)
-
 
 
 xlabel("Earth Departure Date")

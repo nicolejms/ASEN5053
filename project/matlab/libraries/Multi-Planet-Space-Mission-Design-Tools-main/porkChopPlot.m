@@ -12,10 +12,10 @@ dayInSec = 24*60*60;
 planetID1 = 3;
 planetID2 = 5;
 
-t1min = (J0(2028, 11, 14) - J0(2000,1,1))*dayInSec;
-t1max = (J0(2029, 6, 1) - J0(2000,1,1))*dayInSec;
-t2min = (J0(2031, 6, 1) - J0(2000,1,1))*dayInSec;
-t2max = (J0(2032, 6, 1) - J0(2000,1,1))*dayInSec;
+t1min = (J0(2025, 9, 10) - J0(2000,1,1))*dayInSec;
+t1max = (J0(2025, 11, 10) - J0(2000,1,1))*dayInSec;
+t2min = (J0(2028, 3, 1) - J0(2000,1,1))*dayInSec;
+t2max = (J0(2028, 11, 1) - J0(2000,1,1))*dayInSec;
 
 steps = 1000 ; % increasing increases computation time exponentially
 deltaVlimit = 50; %[km/s] 
