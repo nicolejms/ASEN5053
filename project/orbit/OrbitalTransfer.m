@@ -9,7 +9,7 @@ G = 6.6743e-20; % N*km^3/kg^2
 % Masses
 muSun = 1.3271e11; % km^3/s^2
 muEarth = 3.986e5; % km^3/s^2
-muJupiter = Gsaturn; % km^3/s^2
+muJupiter = 1.2671e8; % km^3/s^2
 massEuropa = 480e20; % kg
 muEuropa = G*massEuropa; % km^3/s^2
 
@@ -20,7 +20,7 @@ REuropa = 1561; % km
 
 % Orbital semi-major axes
 aEarth = 1 * au; % km, around Sun
-aJupiter = 3.2 * au; % km, around Sun
+aJupiter = 5.2 * au; % km, around Sun
 aEuropa = 671000; % km, around Jupiter
 
 % Spacecraft trajectory parameters
@@ -81,7 +81,7 @@ dvEuropa = abs(vCircEuropaSC-vHypPeriEuropa);
 
 % Total Delta-v
 dvTotal = dvEarth+dvJupiter+dvEuropa;
-disp(dvTotal);
+disp("total dv " + dvTotal);
 
 % determine phase angles
     mmorigin = MMfromMua(muSun,aEarth);
@@ -96,7 +96,7 @@ disp(dvTotal);
 
 %% bielliptic transfer 
 
-aIntermed = 2.3519e+08; 
+aIntermed = 7.5*au; 
 % Earth-to-Intermediate orbit bielliptic transfer
 aBiEarthToIntermed = (aEarth+aIntermed)/2;
 vBiEarth = sqrt(2*muSun/aEarth - muSun/aBiEarthToIntermed);
