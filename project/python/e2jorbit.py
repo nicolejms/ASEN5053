@@ -1,11 +1,16 @@
 # %%
-import numpy as np
-import math as math
-import plotly.io as pio
+# This Jupyter notebook generates a Hohmann transfer orbit from Earth to Jupiter using the poliastro library and solving lambert's problem
+# The required inputs are the departure and arrival dates, the departure and arrival planets, and the number of revolutions
+# Ephemerides data from JPL/NASA is used to get the position of the planets at the departure and arrival dates
+# The resulting transfer orbit is plotted in 3D using the plotly library and in 2D using the poliastro library
+# The program outputs the departure and arrival velocities, the delta-v required for the transfer, the time of flight, and the transfer orbit
+# Excess hyperbolic velocity of the spacecraft is also calculated to determine delta-v required for spaceship capture at Jupiter and transfer to Europa
 
 from astropy import units as u
 from astropy import time
-from astropy.coordinates import solar_system_ephemeris
+
+import numpy as np
+import math as math
 
 from poliastro import iod
 from poliastro.bodies import Body, Earth, Jupiter, Sun
@@ -13,15 +18,23 @@ from poliastro.ephem import Ephem
 from poliastro.maneuver import Maneuver
 from poliastro.twobody import Orbit
 from poliastro.util import time_range
-from poliastro.plotting import StaticOrbitPlotter
+
+# %%
+import plotly.io as pio
 
 pio.renderers.default = "plotly_mimetype+notebook_connected"
+
+# %%
+from astropy.coordinates import solar_system_ephemeris
+
 solar_system_ephemeris.set("jpl")
 
+# %%
 # Initial data
 date_launch = time.Time("2025-10-02 00:00", scale="utc").tdb
 date_arrival = time.Time("2028-04-16 00:00", scale="utc").tdb
 
+# %%
 earth = Ephem.from_body(Earth, time_range(date_launch, end=date_arrival))
 jupiter = Ephem.from_body(Jupiter, time_range(date_launch, end=date_arrival))
 # Solve for departure and target orbits
@@ -33,6 +46,9 @@ print(ss_earth.r)
 print(ss_jupiter.v/4/60/60)
 print(ss_jupiter.r)
 
+
+
+# %%
 # Solve for the transfer maneuver
 man_lambert = Maneuver.lambert(ss_earth, ss_jupiter)
 
@@ -52,6 +68,7 @@ print(ss_trans.ecc)
 print(ss_target.a)
 print(ss_target.ecc)
 
+# %%
 from poliastro.plotting import OrbitPlotter3D
 plotter = OrbitPlotter3D()
 plotter.set_attractor(Sun)
@@ -67,11 +84,13 @@ plotter.plot_trajectory(
 )
 plotter.set_view(45 * u.deg, 260 * u.deg, distance=3* u.km)
 
+# %%
+from poliastro.plotting import StaticOrbitPlotter
+
 l1 = "Earth at launch (" + date_launch.strftime('%Y-%m-%d') + ")"
 l2 = date_launch.strftime('%Y-%m-%d') + " (Jupiter at launch)"
 l3 = date_arrival.strftime('%Y-%m-%d') + " (Earth at arrival)"
 l4 = date_arrival.strftime('%Y-%m-%d') + " (Jupiter at arrival)"
-
 plotter = StaticOrbitPlotter()
 plotter.plot_body_orbit(
     Earth,
@@ -88,7 +107,9 @@ plotter.plot_trajectory(
     color="black",
     label="Transfer orbit",
 )
+# plotter.set_view(45 * u.deg, 260 * u.deg, distance=3* u.km)
 
+# %%
 # Jupiter to Europa transfer
 
 from astropy.constants import Constant
@@ -135,6 +156,3 @@ craft_jupiter = Orbit.circular(Jupiter,1000000 *u.km,epoch=date_arrival)
 print(ss_target.a)
 print(ss_target.ecc)
 print((craft_jupiter.v + ss_target.v))
-
-
-
