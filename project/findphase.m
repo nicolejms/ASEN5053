@@ -1,0 +1,20 @@
+% generate date time arrays
+t1Earth = datetime(2024,6,20,0,0,0);
+t2Earth = datetime(2032,6,20,0,0,0);
+tEarth = t1Earth:caldays(1):t2Earth;
+
+% create structures to store data
+R= [0 0 0 0 0 0 0];Phase = {};
+k = 1;
+for i = 1:length(tEarth)
+    [r1,~] = planetEphemeris(juliandate(tEarth(i)),'Sun','Earth',430);
+    [r2,~] = planetEphemeris(juliandate(tEarth(i)),'Sun','Jupiter',430);
+    R = [R; juliandate(tEarth(i)) r1 r2];
+
+    % assume both are on same ecliptic plane... so just x,y coord
+    phase = acosd(dot(r1(1:2),r2(1:2))/(norm(r1(1:2))*norm(r2(1:2))));
+    if phase > 97 && phase < 98
+        Phase = [Phase; string(tEarth(i))  phase]
+    end
+end
+
