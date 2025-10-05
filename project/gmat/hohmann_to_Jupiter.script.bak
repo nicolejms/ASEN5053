@@ -53,6 +53,53 @@ GMAT DefaultSC.AttitudeRateDisplayStateType = 'AngularVelocity';
 GMAT DefaultSC.AttitudeCoordinateSystem = EarthMJ2000Eq;
 GMAT DefaultSC.EulerAngleSequence = '321';
 
+Create Spacecraft Spacecraft1;
+GMAT Spacecraft1.DateFormat = UTCGregorian;
+GMAT Spacecraft1.Epoch = '01 Jan 2000 11:59:28.000';
+GMAT Spacecraft1.CoordinateSystem = EarthMJ2000Eq;
+GMAT Spacecraft1.DisplayStateType = Keplerian;
+GMAT Spacecraft1.SMA = 12756;
+GMAT Spacecraft1.ECC = 1.136938421749821e-16;
+GMAT Spacecraft1.INC = 0;
+GMAT Spacecraft1.RAAN = 0;
+GMAT Spacecraft1.AOP = 0;
+GMAT Spacecraft1.TA = 0;
+GMAT Spacecraft1.DryMass = 850;
+GMAT Spacecraft1.Cd = 2.2;
+GMAT Spacecraft1.Cr = 1.8;
+GMAT Spacecraft1.DragArea = 15;
+GMAT Spacecraft1.SRPArea = 1;
+GMAT Spacecraft1.SPADDragScaleFactor = 1;
+GMAT Spacecraft1.SPADSRPScaleFactor = 1;
+GMAT Spacecraft1.AtmosDensityScaleFactor = 1;
+GMAT Spacecraft1.ExtendedMassPropertiesModel = 'None';
+GMAT Spacecraft1.NAIFId = -10006001;
+GMAT Spacecraft1.NAIFIdReferenceFrame = -9006001;
+GMAT Spacecraft1.OrbitColor = Green;
+GMAT Spacecraft1.TargetColor = LightGray;
+GMAT Spacecraft1.OrbitErrorCovariance = [ 1e+70 0 0 0 0 0 ; 0 1e+70 0 0 0 0 ; 0 0 1e+70 0 0 0 ; 0 0 0 1e+70 0 0 ; 0 0 0 0 1e+70 0 ; 0 0 0 0 0 1e+70 ];
+GMAT Spacecraft1.CdSigma = 1e+70;
+GMAT Spacecraft1.CrSigma = 1e+70;
+GMAT Spacecraft1.Id = 'SatId';
+GMAT Spacecraft1.Attitude = CoordinateSystemFixed;
+GMAT Spacecraft1.SPADSRPInterpolationMethod = Bilinear;
+GMAT Spacecraft1.SPADSRPScaleFactorSigma = 1e+70;
+GMAT Spacecraft1.SPADDragInterpolationMethod = Bilinear;
+GMAT Spacecraft1.SPADDragScaleFactorSigma = 1e+70;
+GMAT Spacecraft1.AtmosDensityScaleFactorSigma = 1e+70;
+GMAT Spacecraft1.ModelFile = 'aura.3ds';
+GMAT Spacecraft1.ModelOffsetX = 0;
+GMAT Spacecraft1.ModelOffsetY = 0;
+GMAT Spacecraft1.ModelOffsetZ = 0;
+GMAT Spacecraft1.ModelRotationX = 0;
+GMAT Spacecraft1.ModelRotationY = 0;
+GMAT Spacecraft1.ModelRotationZ = 0;
+GMAT Spacecraft1.ModelScale = 1;
+GMAT Spacecraft1.AttitudeDisplayStateType = 'Quaternion';
+GMAT Spacecraft1.AttitudeRateDisplayStateType = 'AngularVelocity';
+GMAT Spacecraft1.AttitudeCoordinateSystem = EarthMJ2000Eq;
+GMAT Spacecraft1.EulerAngleSequence = '321';
+
 %----------------------------------------
 %---------- ForceModels
 %----------------------------------------
@@ -96,23 +143,27 @@ GMAT DefaultProp.StopIfAccuracyIsViolated = true;
 %---------- Burns
 %----------------------------------------
 
-Create ImpulsiveBurn DV1;
-GMAT DV1.CoordinateSystem = SunInertial;
-GMAT DV1.Element1 = -5.426966;
-GMAT DV1.Element2 = 6.106325;
-GMAT DV1.Element3 = 1.8516548;
-GMAT DV1.DecrementMass = false;
-GMAT DV1.Isp = 300;
-GMAT DV1.GravitationalAccel = 9.81;
+Create ImpulsiveBurn InitialOrbitInsertion;
+GMAT InitialOrbitInsertion.CoordinateSystem = Local;
+GMAT InitialOrbitInsertion.Origin = Earth;
+GMAT InitialOrbitInsertion.Axes = VNB;
+GMAT InitialOrbitInsertion.Element1 = 0.865;
+GMAT InitialOrbitInsertion.Element2 = 0;
+GMAT InitialOrbitInsertion.Element3 = 0;
+GMAT InitialOrbitInsertion.DecrementMass = false;
+GMAT InitialOrbitInsertion.Isp = 300;
+GMAT InitialOrbitInsertion.GravitationalAccel = 9.81;
 
-Create ImpulsiveBurn DV2;
-GMAT DV2.CoordinateSystem = SunInertial;
-GMAT DV2.Element1 = 3.6255668;
-GMAT DV2.Element2 = -10.3477403;
-GMAT DV2.Element3 = -7.3314396;
-GMAT DV2.DecrementMass = false;
-GMAT DV2.Isp = 300;
-GMAT DV2.GravitationalAccel = 9.81;
+Create ImpulsiveBurn FinalOrbitInsertion;
+GMAT FinalOrbitInsertion.CoordinateSystem = Local;
+GMAT FinalOrbitInsertion.Origin = Earth;
+GMAT FinalOrbitInsertion.Axes = VNB;
+GMAT FinalOrbitInsertion.Element1 = 0.725;
+GMAT FinalOrbitInsertion.Element2 = 0;
+GMAT FinalOrbitInsertion.Element3 = 0;
+GMAT FinalOrbitInsertion.DecrementMass = false;
+GMAT FinalOrbitInsertion.Isp = 300;
+GMAT FinalOrbitInsertion.GravitationalAccel = 9.81;
 
 %----------------------------------------
 %---------- Coordinate Systems
@@ -141,23 +192,23 @@ GMAT DefaultDC.Algorithm = NewtonRaphson;
 Create OrbitView DefaultOrbitView;
 GMAT DefaultOrbitView.SolverIterations = Current;
 GMAT DefaultOrbitView.UpperLeft = [ 0 0 ];
-GMAT DefaultOrbitView.Size = [ 0.5576470588235294 1.257211538461539 ];
-GMAT DefaultOrbitView.RelativeZOrder = 120;
+GMAT DefaultOrbitView.Size = [ 0.5576470588235294 1.254807692307692 ];
+GMAT DefaultOrbitView.RelativeZOrder = 383;
 GMAT DefaultOrbitView.Maximized = false;
-GMAT DefaultOrbitView.Add = {DefaultSC, Sun, Venus, Earth};
-GMAT DefaultOrbitView.CoordinateSystem = SunInertial;
-GMAT DefaultOrbitView.DrawObject = [ true true true true ];
+GMAT DefaultOrbitView.Add = {Spacecraft1, Earth};
+GMAT DefaultOrbitView.CoordinateSystem = EarthFixed;
+GMAT DefaultOrbitView.DrawObject = [ true true ];
 GMAT DefaultOrbitView.DataCollectFrequency = 1;
 GMAT DefaultOrbitView.UpdatePlotFrequency = 50;
 GMAT DefaultOrbitView.NumPointsToRedraw = 0;
 GMAT DefaultOrbitView.ShowPlot = true;
 GMAT DefaultOrbitView.MaxPlotPoints = 20000;
 GMAT DefaultOrbitView.ShowLabels = true;
-GMAT DefaultOrbitView.ViewPointReference = Sun;
-GMAT DefaultOrbitView.ViewPointVector = DefaultSC;
-GMAT DefaultOrbitView.ViewDirection = Sun;
-GMAT DefaultOrbitView.ViewScaleFactor = 4;
-GMAT DefaultOrbitView.ViewUpCoordinateSystem = SunInertial;
+GMAT DefaultOrbitView.ViewPointReference = Earth;
+GMAT DefaultOrbitView.ViewPointVector = Earth;
+GMAT DefaultOrbitView.ViewDirection = Earth;
+GMAT DefaultOrbitView.ViewScaleFactor = 1;
+GMAT DefaultOrbitView.ViewUpCoordinateSystem = EarthFixed;
 GMAT DefaultOrbitView.ViewUpAxis = Z;
 GMAT DefaultOrbitView.EclipticPlane = Off;
 GMAT DefaultOrbitView.XYPlane = On;
@@ -172,9 +223,9 @@ GMAT DefaultOrbitView.EnableConstellations = Off;
 
 Create GroundTrackPlot DefaultGroundTrackPlot;
 GMAT DefaultGroundTrackPlot.SolverIterations = Current;
-GMAT DefaultGroundTrackPlot.UpperLeft = [ 0 0.6706730769230769 ];
+GMAT DefaultGroundTrackPlot.UpperLeft = [ 0 0.6682692307692307 ];
 GMAT DefaultGroundTrackPlot.Size = [ 0.1058823529411765 0.6682692307692307 ];
-GMAT DefaultGroundTrackPlot.RelativeZOrder = 101;
+GMAT DefaultGroundTrackPlot.RelativeZOrder = 387;
 GMAT DefaultGroundTrackPlot.Maximized = false;
 GMAT DefaultGroundTrackPlot.Add = {DefaultSC};
 GMAT DefaultGroundTrackPlot.DataCollectFrequency = 1;
@@ -185,26 +236,46 @@ GMAT DefaultGroundTrackPlot.MaxPlotPoints = 20000;
 GMAT DefaultGroundTrackPlot.CentralBody = Earth;
 GMAT DefaultGroundTrackPlot.TextureMap = 'ModifiedBlueMarble.jpg';
 
+Create OrbitView OrbitView1;
+GMAT OrbitView1.SolverIterations = Current;
+GMAT OrbitView1.UpperLeft = [ 0.0488235294117647 0.015625 ];
+GMAT OrbitView1.Size = [ 0.7535294117647059 0.9663461538461539 ];
+GMAT OrbitView1.RelativeZOrder = 391;
+GMAT OrbitView1.Maximized = false;
+GMAT OrbitView1.Add = {Spacecraft1, Earth};
+GMAT OrbitView1.CoordinateSystem = EarthMJ2000Eq;
+GMAT OrbitView1.DrawObject = [ true true ];
+GMAT OrbitView1.DataCollectFrequency = 1;
+GMAT OrbitView1.UpdatePlotFrequency = 50;
+GMAT OrbitView1.NumPointsToRedraw = 0;
+GMAT OrbitView1.ShowPlot = true;
+GMAT OrbitView1.MaxPlotPoints = 20000;
+GMAT OrbitView1.ShowLabels = true;
+GMAT OrbitView1.ViewPointReference = Earth;
+GMAT OrbitView1.ViewPointVector = [ 0 0 30000 ];
+GMAT OrbitView1.ViewDirection = Earth;
+GMAT OrbitView1.ViewScaleFactor = 1;
+GMAT OrbitView1.ViewUpCoordinateSystem = EarthMJ2000Eq;
+GMAT OrbitView1.ViewUpAxis = Z;
+GMAT OrbitView1.EclipticPlane = Off;
+GMAT OrbitView1.XYPlane = On;
+GMAT OrbitView1.WireFrame = Off;
+GMAT OrbitView1.Axes = On;
+GMAT OrbitView1.Grid = Off;
+GMAT OrbitView1.SunLine = Off;
+GMAT OrbitView1.UseInitialView = On;
+GMAT OrbitView1.StarCount = 7000;
+GMAT OrbitView1.EnableStars = On;
+GMAT OrbitView1.EnableConstellations = On;
+
 
 %----------------------------------------
 %---------- Mission Sequence
 %----------------------------------------
 
 BeginMissionSequence;
-Target DefaultDC {SolveMode = Solve, ExitMode = SaveAndContinue, ShowProgressWindow = true};
-   Vary 'varydv1x' DefaultDC(DV1.Element1 = -6.51236, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
-   Vary 'VaryDV1y' DefaultDC(DV1.Element2 = 7.32759, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
-   Vary 'VaryDV1z' DefaultDC(DV1.Element3 = 2.22199, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
-   Vary 'VaryDV2x' DefaultDC(DV2.Element1 = 4.35068, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
-   Vary 'VaryDV2y' DefaultDC(DV2.Element2 = -12.417288, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
-   Vary 'Varydv2z' DefaultDC(DV2.Element3 = -8.79773, {Perturbation = 1e-7, Lower = -20, Upper = 20, MaxStep = 0.2, AdditiveScaleFactor = 0.0, MultiplicativeScaleFactor = 1.0});
-   Maneuver DV1(DefaultSC);
-   Propagate DefaultProp(DefaultSC) {DefaultSC.ElapsedSecs = 11577600, OrbitColor = [218 37 150]};
-   Maneuver DV2(DefaultSC);
-   Achieve 'AchieveX' DefaultDC(DefaultSC.SunInertial.X = 2.454556e7, {Tolerance = 1});
-   Achieve 'AchieveY' DefaultDC(DefaultSC.SunInertial.Y = -9.611903e7, {Tolerance = 1});
-   Achieve 'AchieveZ' DefaultDC(DefaultSC.SunInertial.Z = -4.480278e7, {Tolerance = 1});
-   Achieve 'AchieveVX' DefaultDC(DefaultSC.SunInertial.VX = 33.882657, {Tolerance = 0.0001});
-   Achieve 'AchieveVY' DefaultDC(DefaultSC.SunInertial.VY = 7.87292, {Tolerance = 0.0001});
-   Achieve 'AchieveVZ' DefaultDC(DefaultSC.SunInertial.VZ = 1.398796, {Tolerance = 0.0001});
-EndTarget;  % For targeter DefaultDC
+Propagate 'ParkingOrbit' DefaultProp(Spacecraft1) {Spacecraft1.Earth.Apoapsis, OrbitColor = [255 0 0]};
+Maneuver InitialOrbitInsertion(Spacecraft1);
+Propagate DefaultProp(Spacecraft1) {Spacecraft1.Earth.Periapsis, OrbitColor = [128 0 64]};
+Maneuver FinalOrbitInsertion(Spacecraft1);
+Propagate DefaultProp(Spacecraft1) {Spacecraft1.ElapsedDays = 0.5, OrbitColor = [0 128 0]};
